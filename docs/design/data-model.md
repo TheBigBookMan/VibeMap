@@ -149,6 +149,20 @@ erDiagram
         datetime deleted_at
     }
 
+    report {
+        string ref PK
+        string reporter_ref FK
+        string reported_event_ref FK
+        string reported_user_ref FK
+        string reported_message_ref FK
+        string reason
+        string description
+        string status "pending | reviewed | resolved"
+        datetime created_at
+        datetime resolved_at
+        datetime updated_at
+    }
+
     feature_flag {
         string ref PK
         string key UK
