@@ -116,7 +116,8 @@ erDiagram
 
     interest {
         string ref PK
-        string name
+        string name UK
+        string description
     }
 
     notification {
