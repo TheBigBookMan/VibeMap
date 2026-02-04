@@ -29,12 +29,16 @@ erDiagram
 
     subscription {
         string ref PK
-        string user_ref FK
-        string stripe_id "id for stripe connection"
-
+        string user_ref FK UK
+        string stripe_subscription_id UK
+        string stripe_customer_id
+        string plan_type "free | premium | enterprise"
+        string status "active | canceled | past_die | unpaid"
+        datetime current_period_start
+        datetime current_period_end
         datetime created_at
         datetime updated_at
-        datetime deleted_at
+        datetime canceled_at
     }
 
     event {
