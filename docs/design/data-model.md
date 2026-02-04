@@ -75,6 +75,17 @@ erDiagram
         datetime updated_at
     }
 
+    event_invitation {
+        string ref PK
+        string event_ref FK
+        string inviter_ref FK
+        string invitee_ref FK
+        string status "pending | accepted | declined"
+        datetime sent_at
+        datetime responded_at
+        datetime created_at
+    }
+
     chat_message {
         string ref PK
         string user_ref FK
