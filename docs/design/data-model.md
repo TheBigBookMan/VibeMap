@@ -63,6 +63,18 @@ erDiagram
         datetime deleted_at
     }
 
+    event_attendee {
+        string ref PK
+        string user_ref FK
+        string event_ref FK "index"
+        string status "pending | confirmed | checked_in | no_show | cancelled"
+        datetime joined_at
+        datetime checked_in_at
+        datetime cancelled_at
+        datetime created_at
+        datetime updated_at
+    }
+
     chat_message {
         string ref PK
         string user_ref FK
@@ -97,13 +109,6 @@ erDiagram
         jsonb payload
         boolean read
         datetime created_at 
-    }
-
-    event_attendee {
-        string user_ref FK
-        string event_ref FK "index"
-        string status "signed_up | attended | did_not_attend"
-        datetime qr_code_submitted
     }
 
     user_interests {
