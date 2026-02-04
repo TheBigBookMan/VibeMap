@@ -86,6 +86,15 @@ erDiagram
         datetime created_at
     }
 
+    event_image {
+        string ref PK
+        string event_ref FK
+        string url
+        int display_order
+        boolean is_cover
+        datetime created_at
+    }
+
     chat_message {
         string ref PK
         string user_ref FK
