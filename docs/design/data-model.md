@@ -120,6 +120,11 @@ erDiagram
         string description
     }
 
+    user_interest {
+        string user_ref PK FK
+        string interest_ref PK FK
+    }
+
     notification {
         string ref PK
         string user_ref FK
@@ -127,11 +132,6 @@ erDiagram
         jsonb payload
         boolean read
         datetime created_at 
-    }
-
-    user_interests {
-        string user_ref PK "FK"
-        string interest_ref PK "FK"
     }
 
     feature_flag {
