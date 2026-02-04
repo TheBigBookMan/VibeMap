@@ -14,6 +14,19 @@ erDiagram
         datetime date_created
     }
 
+    user_profile {
+        string ref PK
+        string user_ref FK UK
+        string bio
+        string home_city
+        geometry home_location "Point, 4326"
+        string avatar_url
+        jsonb preferences
+        datetime created_at
+        datetime updated_at
+    }
+
+
     subscription {
         string ref PK
         string user_ref FK
