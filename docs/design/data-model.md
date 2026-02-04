@@ -44,18 +44,20 @@ erDiagram
     event {
         string ref PK
         string category_ref FK
-        string user_ref FK "index as created_by"
+        string creator_ref FK "created by user"
         string title
-        string bio
-        string location "location in human readable"
-        geometry geom "Point, 4326- location in geo"
-        int users_allowed "max number users can join"
-        int users_joined "current amount of users joined"
+        string description
+        string location_name "location in human readable"
+        geometry location_point "Point, 4326- location in geo"
+        int max_attendees
+        string visibility "public | private | friends_only"
+        string status "draft | published | cancelled | completed"
         datetime start_time
         datetime end_time
-        int duration "in minutes"
-        string qr_code "unique QR code hash"
+        string cover_image_url
+        string qr_code_hash UK "unique QR code hash"
         datetime qr_code_generated_at
+        jsonb custom_fields
         datetime created_at
         datetime updated_at
         datetime deleted_at
