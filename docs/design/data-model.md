@@ -50,6 +50,15 @@ erDiagram
         datetime deleted_at
     }
 
+    chat_message {
+        int id
+        string ref PK
+        string user_ref FK
+        string event_ref FK
+        string content
+        datetime created_at
+    }
+
     location {
         int id
         string ref PK
@@ -72,16 +81,34 @@ erDiagram
         string icon
     }
 
-    event_attendance {
+    notification {
+        int id
+        string ref PK
+        string user_ref FK
+        string type
+        jsonb payload
+        boolean read
+        datetime created_at 
+    }
+
+    event_attendee {
         int id PK
         string user_ref FK
         string event_ref FK "index"
+        string status "signed_up | attended | did_not_attend"
         datetime qr_code_submitted
     }
 
     user_interests {
         string user_ref PK "FK"
         string interest_ref PK "FK"
+    }
+
+    feature_flag {
+        string ref PK
+        string key UK
+        boolean enabled
+        jsonb rules
     }
 
     user ||--o| subscription : "owns"
@@ -91,5 +118,8 @@ erDiagram
     category ||--o{ event : "contains"
 
     event ||--o| user : "created by"
-    user ||--o{ event_attendance : "checks into"
-    event ||--o{ event_attendance : "records"
+    user ||--o{ event_attendee : "checks into"
+    event ||--o{ event_attendee : "records"
+
+    user ||--o{ chat_message : "can create"
+    event ||--o{ chat_message : "can host"
