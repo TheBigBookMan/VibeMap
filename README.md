@@ -4,6 +4,11 @@
 VibeMap is an application which brings people together by allowing users to create events and other users can join that event. Meeting up in real life based on messaging through the app for a specific activity.
 
 ## Tech Stack
+### Product
+| Technology | Purpose |
+|------------|---------|
+| Linear     | Product management |
+
 ### Frontend
 
 | Technology | Purpose |
