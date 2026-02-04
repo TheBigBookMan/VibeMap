@@ -100,7 +100,11 @@ erDiagram
         string user_ref FK
         string event_ref FK
         string content
+        string message_type "text | image | system"
+        boolean edited
+        datetime edited_at
         datetime created_at
+        datetime deleted_at
     }
 
     location {
