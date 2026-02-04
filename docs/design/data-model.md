@@ -125,6 +125,16 @@ erDiagram
         string interest_ref PK FK
     }
 
+    user_relationship {
+        string ref PK
+        string user_ref FK
+        string related_user_ref FK
+        string type "friend | blocked | following"
+        string status "pending | accepted | blocked"
+        datetime created_at
+        datetime updated_at
+    }
+
     notification {
         string ref PK
         string user_ref FK
