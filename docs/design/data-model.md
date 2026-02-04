@@ -107,13 +107,6 @@ erDiagram
         datetime deleted_at
     }
 
-    location {
-        string ref PK
-        string user_ref FK
-        geometry geom "Point, 4326"
-        datetime created_at
-    }
-
     interest {
         string ref PK
         string name
