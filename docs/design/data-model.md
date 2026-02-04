@@ -138,10 +138,15 @@ erDiagram
     notification {
         string ref PK
         string user_ref FK
-        string type
-        jsonb payload
+        string type "event_invite | event_reminder | message | system"
+        string title
+        string body
+        jsonb data
         boolean read
+        string action_url
+        datetime read_at
         datetime created_at 
+        datetime deleted_at
     }
 
     feature_flag {
