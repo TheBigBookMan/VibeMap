@@ -107,16 +107,16 @@ erDiagram
         datetime deleted_at
     }
 
+    category {
+        string ref PK
+        string name UK
+        string description
+        string icon_url
+    }
+
     interest {
         string ref PK
         string name
-    }
-
-    category {
-        string ref PK
-        string name
-        string bio
-        string icon
     }
 
     notification {
