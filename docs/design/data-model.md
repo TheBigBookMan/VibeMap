@@ -1,25 +1,20 @@
 erDiagram
     user {
-        int id
         string ref PK
-        string firebase_uid "unique"
-        string email "unique"
+        string firebase_uid UK "for auth"
+        string email "just for emails"
         string display_name
         string first_name
         string last_name
-        string bio
-        string home_city
         boolean email_verified
-        string avatar "URL to image"
         string role "user | admin- for now"
-        string tier "free | paid | premium"
+        datetime last_login
         datetime updated_at
         datetime deleted_at
         datetime date_created
     }
 
     subscription {
-        int id
         string ref PK
         string user_ref FK
         string stripe_id "id for stripe connection"
@@ -30,7 +25,6 @@ erDiagram
     }
 
     event {
-        int id
         string ref PK
         string category_ref FK
         string user_ref FK "index as created_by"
@@ -51,7 +45,6 @@ erDiagram
     }
 
     chat_message {
-        int id
         string ref PK
         string user_ref FK
         string event_ref FK
@@ -60,7 +53,6 @@ erDiagram
     }
 
     location {
-        int id
         string ref PK
         string user_ref FK
         geometry geom "Point, 4326"
@@ -68,13 +60,11 @@ erDiagram
     }
 
     interest {
-        int id
         string ref PK
         string name
     }
 
     category {
-        int id
         string ref PK
         string name
         string bio
@@ -82,7 +72,6 @@ erDiagram
     }
 
     notification {
-        int id
         string ref PK
         string user_ref FK
         string type
@@ -92,7 +81,6 @@ erDiagram
     }
 
     event_attendee {
-        int id PK
         string user_ref FK
         string event_ref FK "index"
         string status "signed_up | attended | did_not_attend"
