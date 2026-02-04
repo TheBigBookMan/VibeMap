@@ -1,22 +1,22 @@
 erDiagram
-    user {
-        string ref PK
-        string firebase_uid UK "for auth"
-        string email "just for emails"
-        string display_name
-        string first_name
-        string last_name
-        boolean email_verified
-        string role "user | admin- for now"
-        datetime last_login
-        datetime updated_at
-        datetime deleted_at
-        datetime date_created
-    }
+user {
+string ref PK
+string firebase_uid UK "for auth"
+string email "just for emails"
+string display_name
+string first_name
+string last_name
+boolean email_verified
+string role "user | admin- for now"
+datetime last_login
+datetime updated_at
+datetime deleted_at
+datetime date_created
+}
 
     user_profile {
         string ref PK
-        string user_ref FK UK
+        string user_ref FK "UK"
         string bio
         string home_city
         geometry home_location "Point, 4326"
@@ -29,7 +29,7 @@ erDiagram
 
     subscription {
         string ref PK
-        string user_ref FK UK
+        string user_ref FK "UK"
         string stripe_subscription_id UK
         string stripe_customer_id
         string plan_type "free | premium | enterprise"
@@ -121,8 +121,8 @@ erDiagram
     }
 
     user_interest {
-        string user_ref PK FK
-        string interest_ref PK FK
+        string user_ref PK "FK"
+        string interest_ref PK "FK"
     }
 
     user_relationship {
@@ -170,15 +170,22 @@ erDiagram
         jsonb rules
     }
 
-    user ||--o| subscription : "owns"
-    user ||--o| location : "updates"
-    user ||--o{ user_interests : "selects"
-    interest ||--o{ user_interests : "assigned to"
-    category ||--o{ event : "contains"
+    user ||--|| user_profile : "has"
+    user ||--o| subscription : "subscribed to"
+    user ||--o{ event : "created"
+    user ||--o{ event_attendee : "attends"
+    user ||--o{ event_invitation : "sends"
+    user ||--o{ event_invitation : "receives"
+    user ||--o{ chat_message : "writes"
+    user ||--o{ notification : "receives"
+    user ||--o{ user_interest : "has"
+    user ||--o{ user_relationship : "initates"
+    user ||--o{ report : "files"
 
-    event ||--o| user : "created by"
-    user ||--o{ event_attendee : "checks into"
-    event ||--o{ event_attendee : "records"
+    event ||--o{ event_attendee : "has"
+    event ||--o{ event_invitation : "for"
+    event ||--o{ event_image : "has"
+    event ||--o{ chat_message : "contains"
+    event ||--|| category : "belongs_to"
 
-    user ||--o{ chat_message : "can create"
-    event ||--o{ chat_message : "can host"
+    interest ||--o{ user_interest : "tagged_to"
