@@ -33,7 +33,7 @@ erDiagram
         string ref PK
         string user_ref FK "UK"
         string stripe_subscription_id UK
-        string stripe_customer_id
+        string stripe_customer_id UK
         string plan_type "free | premium | enterprise"
         string status "active | canceled | past_due | unpaid"
         datetime current_period_start
@@ -225,8 +225,8 @@ CREATE INDEX idx_user_email_active ON user(email) WHERE deleted_at IS NULL;
 ```
 
 **Rationale**
-- `firebase_uid` index: Used for every authenticated API request
-- `email` partial index: Only index non-deleted users for faster queries
+- `user_firebase_uid_key` index: Used for every authenticated API request
+- `idx_user_email_active` partial index: Only index non-deleted users for faster queries
 
 ### user_profile
 Extension table which provides descriptive information for a user with separation of concerns from the user table as it is frequently updated.
@@ -251,4 +251,50 @@ CREATE UNIQUE INDEX user_ref_key ON user_profile(user_ref);
 ```
 
 **Rationale**
-- `user_ref` unique index: Enforces 1:1 relationship as one profile per user and enables faster lookup for a user and their joining user_profile.
+- `user_ref_key` unique index: Enforces 1:1 relationship as one profile per user and enables faster lookup for a user and their joining user_profile.
+
+### subscription
+Table that holds the information related to the users subscription with Stripe.
+
+**Columns**
+- `ref` (PK): UUID for primary key
+- `user_ref` (FK): UID foreign key for relationship with a user
+- `stripe_subscription_id`: Unique identifier for the users stripe subscription
+- `stripe_customer_id`: Unique identifier for the users stripe id
+- `plan_type`: Which plan the user is on "free | premium | enterprise"
+- `status`: The status of their subscription "active | canceled | past_due | unpaid"
+- `current_period_start`: Starting date of the current plan
+- `current_period_end`: End date of the current plan
+- `cancled_at`: Date of canceled plan or NULL
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX subscription_pkey ON subscription(ref);
+
+-- Identify subscription associated with user
+CREATE UNIQUE INDEX user_ref_idx ON subscription(user_ref);
+
+-- Stripe webhook lookups (frequent)
+CREATE UNIQUE INDEX idx_subscription_stripe_id ON subscription(stripe_subscription_id) WHERE stripe_subscription_id IS NOT NULL;
+
+-- Stripe customer lookup
+CREATE INDEX idx_subscription_stripe_customer ON subscription(stripe_customer_id) WHERE stripe_customer_id IS NOT NULL;
+
+-- View active subscriptions by tier
+CREATE INDEX idx_subscription_active_tier ON subscription(plan_type, status) WHERE status = 'active';
+
+-- View expiring subscriptions
+CREATE INDEX idx_subscription_expiring ON subscription(current_period_end) WHERE status = 'active';
+
+-- View past due subscriptions
+CREATE INDEX idx_subscription_past_due ON subscription(status, updated_at) WHERE status = 'past_due'
+```
+
+**Rationale**
+- `user_ref_idx` unique index: FK with unique constraint that enforces 1:1 relationship with `user` table.
+- `idx_subscription_stripe_id` unique index: Processing stripe webhooks by subscription.
+- `idx_subscription_stripe_customer` index: Finding users subscription by customer id.
+- `idx_subscription_active_tier` partial index: Finding active subscriptions by all plan types.
+- `idx_subscription_expiring` partial index: Finding active subscriptions period ending.
+- `idx_subscription_past_due` partial index: Finding subscriptions past due and checking `updated_at` for any that haven't been retrieved recently.
