@@ -1,13 +1,17 @@
+# VibeMeet Data Model
+
+## Entity Relationship Diagram (ERD)
+```mermaid
 erDiagram
     user {
         string ref PK
-        string firebase_uid UK "for auth | index"
-        string email "just for emails"
+        string firebase_uid UK
+        string email
         string display_name
         string first_name
         string last_name
         boolean email_verified
-        string role "user | admin- for now"
+        string role
         datetime last_login
         datetime updated_at
         datetime deleted_at
@@ -32,7 +36,7 @@ erDiagram
         string stripe_subscription_id UK
         string stripe_customer_id
         string plan_type "free | premium | enterprise"
-        string status "active | canceled | past_die | unpaid"
+        string status "active | canceled | past_due | unpaid"
         datetime current_period_start
         datetime current_period_end
         datetime created_at
@@ -50,8 +54,8 @@ erDiagram
         geometry location_point "Point, 4326- location in geo | index"
         int max_attendees
         string visibility "public | private | friends_only- index"
-        string status "draft | published | cancelled | completed"
-        datetime start_time "index"
+        string status "draft | published | cancelled | completed- index"
+        datetime start_time "composite index (status, start_time) AND deleted_at = NULL"
         datetime end_time
         string cover_image_url
         string qr_code_hash UK "unique QR code hash"
@@ -188,3 +192,39 @@ erDiagram
     event ||--|| category : "belongs_to"
 
     interest ||--o{ user_interest : "tagged_to"
+```
+
+## Tables
+
+### user
+Primary table for user accounts, this is linked to the Firebase Auth.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `firebase_uid` (UK): Firebase authentication UID
+- `email`: User email address used for verification and email contact to user
+- `display_name`: The name the user would like displayed for others- can be different to first_name + last_name
+- `first_name`: The users first name
+- `last_name`: The users last name
+- `email_verified`: Checking if the user has verified, will be used to show others if verified- may limit access to certain things
+- `role`: Differentiate between the different authorisation- "user | admin"
+- `last_login`: Shows the last login time, will be used for determining account expiration (unsure)
+- `updated_at`: Audit trail for last updates
+- `deleted_at`: Audit trail for deleted account- soft delete
+- `date_created`: Used for determining length of time on the app
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX user_pkey ON user(ref);
+
+-- Unique constraint on Firebase UID for auth lookups
+CREATE UNIQUE INDEX user_firebase_uid_key ON user(firebase_uid);
+
+-- Email lookup for active users only
+CREATE INDEX idx_user_email_active ON user(email) WHERE deleted_at IS NULL;
+```
+
+**Rationale**
+- `firebase_uid` index: Used for every authenticated API request
+- `email` partial index: Only index non-deleted users for faster queries
