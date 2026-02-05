@@ -45,19 +45,19 @@ erDiagram
 
     event {
         string ref PK
-        string category_ref FK "index"
-        string creator_ref FK "created by user | index"
+        string category_ref FK
+        string creator_ref FK
         string title
         string description
-        string location_name "location in human readable"
-        geometry location_point "Point, 4326- location in geo | index"
+        string location_name
+        geometry location_point "Point, 4326"
         int max_attendees
-        string visibility "public | private | friends_only- index"
-        string status "draft | published | cancelled | completed- index"
-        datetime start_time "composite index (status, start_time) AND deleted_at = NULL"
+        string visibility
+        string status
+        datetime start_time
         datetime end_time
         string cover_image_url
-        string qr_code_hash UK "unique QR code hash"
+        string qr_code_hash UK
         datetime qr_code_generated_at
         jsonb custom_fields
         datetime created_at
@@ -300,27 +300,6 @@ CREATE INDEX idx_subscription_past_due ON subscription(status, updated_at) WHERE
 - `idx_subscription_past_due` partial index: Finding subscriptions past due and checking `updated_at` for any that haven't been retrieved recently.
 
 ### event
-    event {
-        string ref PK
-        string category_ref FK
-        string creator_ref FK
-        string title
-        string description
-        string location_name "location in human readable"
-        geometry location_point "Point, 4326- location in geo"
-        int max_attendees
-        string visibility "public | private | friends_only-"
-        string status "draft | published | cancelled | completed- "
-        datetime start_time 
-        datetime end_time
-        string cover_image_url
-        string qr_code_hash UK "unique QR code hash"
-        datetime qr_code_generated_at
-        jsonb custom_fields
-        datetime created_at
-        datetime updated_at
-        datetime deleted_at
-    }
 Primary entity for an event which contains the details for the event created by a user.
 
 **Columns**
