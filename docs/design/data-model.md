@@ -34,8 +34,8 @@ erDiagram
         string user_ref FK "UK"
         string stripe_subscription_id UK
         string stripe_customer_id UK
-        string plan_type "free | premium | enterprise"
-        string status "active | canceled | past_due | unpaid"
+        string plan_type
+        string status
         datetime current_period_start
         datetime current_period_end
         datetime created_at
@@ -298,3 +298,76 @@ CREATE INDEX idx_subscription_past_due ON subscription(status, updated_at) WHERE
 - `idx_subscription_active_tier` partial index: Finding active subscriptions by all plan types.
 - `idx_subscription_expiring` partial index: Finding active subscriptions period ending.
 - `idx_subscription_past_due` partial index: Finding subscriptions past due and checking `updated_at` for any that haven't been retrieved recently.
+
+### event
+    event {
+        string ref PK
+        string category_ref FK
+        string creator_ref FK
+        string title
+        string description
+        string location_name "location in human readable"
+        geometry location_point "Point, 4326- location in geo"
+        int max_attendees
+        string visibility "public | private | friends_only-"
+        string status "draft | published | cancelled | completed- "
+        datetime start_time 
+        datetime end_time
+        string cover_image_url
+        string qr_code_hash UK "unique QR code hash"
+        datetime qr_code_generated_at
+        jsonb custom_fields
+        datetime created_at
+        datetime updated_at
+        datetime deleted_at
+    }
+Primary entity for an event which contains the details for the event created by a user.
+
+**Columns**
+- `ref` (PK): UUID for the primary key
+- `category_ref` (FK): Foreign key which creates relation to `category` table
+- `creator_ref` (FK): Foreign key which creates the relation to `user` table for who created the event
+- `title`: Title for the event
+- `description`: Description for the event
+- `location_name`: Human readable format for the location of the event
+- `location_point`: Geometric point data for the location of the event
+- `max_attendees`: Max number of users who can sign up and attend
+- `visibility`: Which type of users can view the event "public | private | friends_only"
+- `status`: What status the event is currently in "draft | published | cancelled | completed"
+- `start_time`: Date and time event starts
+- `end_time`: Date and time event ends
+- `cover_image_url`: URL for the image of the event cover
+- `qr_code_hash`: Unique QR code created for the event attendees need to scan to join face-to-face
+- `qr_code_generated_at`: Date and time QR code was generated at to have expiration
+- `custom_fields`: JSON for any custom fields related to the event
+- `created_at`: Audit log for when event was created it
+- `updated_at`: Audit log for when updates made to the event
+- `deleted_at`: Audit log for when event is deleted
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX event_pkey ON event(ref);
+
+-- Foreign key indexes (for joins)
+CREATE INDEX idx_event_category_fk ON event(category_ref);
+CREATE INDEX idx_event_creator_fk ON event(creator_ref);
+
+-- Event discovery
+CREATE INDEX idx_event_discovery ON event(status, start_time) WHERE deleted_at IS NULL;
+
+-- Category browsing
+CREATE INDEX idx_event_category ON event(category_ref, start_time) WHERE deleted_at IS NULL;
+
+-- Find event locations that are active (map view)
+CREATE INDEX idx_active_event_location ON event USING GIST (location_point) WHERE deleted_at IS NULL AND status = 'published';
+
+-- QR code verification for attendee check in
+CREATE UNIQUE INDEX idx_event_qr_code ON event(qr_code_hash) WHERE qr_code_hash IS NOT NULL;
+```
+
+**Rationale**
+- `idx_event_discovery` partial index: Finding events that are published and starting soon that are also not deleted.
+- `idx_event_category` partial index: Find events under a certain category that are not deleted.
+- `idx_active_event_location` GIST index: Find the geo location of an event quickly for location searching for active events.
+- `idx_event_qr_code` unique index: Ensure that the QR code for each event is unique.
