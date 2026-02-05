@@ -350,3 +350,55 @@ CREATE UNIQUE INDEX idx_event_qr_code ON event(qr_code_hash) WHERE qr_code_hash 
 - `idx_event_category` partial index: Find events under a certain category that are not deleted.
 - `idx_active_event_location` GIST index: Find the geo location of an event quickly for location searching for active events.
 - `idx_event_qr_code` unique index: Ensure that the QR code for each event is unique.
+
+### event_attendee
+event_attendee {
+string ref PK
+string user_ref FK
+string event_ref FK
+string status 
+datetime joined_at
+datetime checked_in_at
+datetime cancelled_at
+datetime created_at
+datetime updated_at
+}
+Table that is for users who are attending an event.
+
+**Columns**
+- `ref` (PK): UUID for primary key
+- `user_ref` (FK): Foreign key relating to the user attending the event
+- `event_ref` (FK): Foreign key relating to the event in attendance
+- `status`: Attendee status "pending | confirmed | checked_in | no_show | cancelled"
+- `joined_at`: Date and time the user joined the event
+- `checked_in_at`: Date and time the user checks in at
+- `cancelled_at`: Date and time the user cancels attending event
+- `created_at`: Audit for when the user selects attending
+- `updated_at`: Date and time for when a user updates their attendance status
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX event_attendee_pk ON event_attendee(ref);
+
+-- Foreign key for relating to event
+CREATE INDEX idx_event_ref_fk ON event_attendee(event_ref);
+
+-- Composite Unique Constraint 
+CREATE UNIQUE INDEX idx_user_event_unique ON event_attendee(event_ref, user_ref);
+
+-- View all users with a particular status for an event
+CREATE INDEX idx_user_status_for_event ON event_attendee(event_ref, status);
+
+-- View all statuses for user
+CREATE INDEX idx_event_attendee_user_status ON event_attendee(user_ref, status);
+
+-- Attendees pending check-in
+CREATE INDEX idx_event_attendee_pending_checkin ON event_attendee(event_ref, status) WHERE checked_in_at IS NULL AND status IN ('confirmed', 'pending');
+```
+
+**Rationale**
+- `idx_user_event_unique` composite unique index: Ensuring that only one user can only attend to an event once.
+- `idx_user_status_for_event` index: Finding particular user statuses for an event.
+- `idx_event_attendee_user_status` index: Finding all statuses for a user.
+- `idx_event_attendee_pending_checkin` partial index: Users who have joined by not checked in yet.
