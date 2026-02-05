@@ -1,18 +1,18 @@
 erDiagram
-user {
-string ref PK
-string firebase_uid UK "for auth"
-string email "just for emails"
-string display_name
-string first_name
-string last_name
-boolean email_verified
-string role "user | admin- for now"
-datetime last_login
-datetime updated_at
-datetime deleted_at
-datetime date_created
-}
+    user {
+        string ref PK
+        string firebase_uid UK "for auth | index"
+        string email "just for emails"
+        string display_name
+        string first_name
+        string last_name
+        boolean email_verified
+        string role "user | admin- for now"
+        datetime last_login
+        datetime updated_at
+        datetime deleted_at
+        datetime date_created
+    }
 
     user_profile {
         string ref PK
@@ -25,7 +25,6 @@ datetime date_created
         datetime created_at
         datetime updated_at
     }
-
 
     subscription {
         string ref PK
@@ -43,16 +42,16 @@ datetime date_created
 
     event {
         string ref PK
-        string category_ref FK
-        string creator_ref FK "created by user"
+        string category_ref FK "index"
+        string creator_ref FK "created by user | index"
         string title
         string description
         string location_name "location in human readable"
-        geometry location_point "Point, 4326- location in geo"
+        geometry location_point "Point, 4326- location in geo | index"
         int max_attendees
-        string visibility "public | private | friends_only"
+        string visibility "public | private | friends_only- index"
         string status "draft | published | cancelled | completed"
-        datetime start_time
+        datetime start_time "index"
         datetime end_time
         string cover_image_url
         string qr_code_hash UK "unique QR code hash"
@@ -65,7 +64,7 @@ datetime date_created
 
     event_attendee {
         string ref PK
-        string user_ref FK
+        string user_ref FK "index"
         string event_ref FK "index"
         string status "pending | confirmed | checked_in | no_show | cancelled"
         datetime joined_at
@@ -77,7 +76,7 @@ datetime date_created
 
     event_invitation {
         string ref PK
-        string event_ref FK
+        string event_ref FK "index"
         string inviter_ref FK
         string invitee_ref FK
         string status "pending | accepted | declined"
@@ -88,7 +87,7 @@ datetime date_created
 
     event_image {
         string ref PK
-        string event_ref FK
+        string event_ref FK "index"
         string url
         int display_order
         boolean is_cover
@@ -97,8 +96,8 @@ datetime date_created
 
     chat_message {
         string ref PK
-        string user_ref FK
-        string event_ref FK
+        string user_ref FK "index"
+        string event_ref FK "index"
         string content
         string message_type "text | image | system"
         boolean edited
@@ -127,8 +126,8 @@ datetime date_created
 
     user_relationship {
         string ref PK
-        string user_ref FK
-        string related_user_ref FK
+        string user_ref FK "index"
+        string related_user_ref FK "index:
         string type "friend | blocked | following"
         string status "pending | accepted | blocked"
         datetime created_at
@@ -137,7 +136,7 @@ datetime date_created
 
     notification {
         string ref PK
-        string user_ref FK
+        string user_ref FK "index"
         string type "event_invite | event_reminder | message | system"
         string title
         string body
