@@ -26,7 +26,6 @@ erDiagram
         geometry home_location "Point, 4326"
         string avatar_url
         jsonb preferences
-        datetime created_at
         datetime updated_at
     }
 
@@ -228,3 +227,28 @@ CREATE INDEX idx_user_email_active ON user(email) WHERE deleted_at IS NULL;
 **Rationale**
 - `firebase_uid` index: Used for every authenticated API request
 - `email` partial index: Only index non-deleted users for faster queries
+
+### user_profile
+Extension table which provides descriptive information for a user with separation of concerns from the user table as it is frequently updated.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `user_ref` (FK): UUID foreign key from `user` table 1:1 relationship
+- `bio`: Description the user can write about themselves
+- `home_city`: Selected dropdown of cities globally
+- `home_location`: Geometry points of the location where they are
+- `avatar_url`: URL for the location of their profile picture avatar
+- `preferences`: JSON format of their selected preferences
+- `updated_at`: Audit log for last updated
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX user_profile_pkey ON user_profile(ref);
+
+-- Unique constraint on foreign key for join
+CREATE UNIQUE INDEX user_ref_key ON user_profile(user_ref);
+```
+
+**Rationale**
+- `user_ref` unique index: Enforces 1:1 relationship as one profile per user and enables faster lookup for a user and their joining user_profile.
