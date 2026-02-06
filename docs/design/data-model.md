@@ -79,13 +79,12 @@ erDiagram
 
     event_invitation {
         string ref PK
-        string event_ref FK "index"
+        string event_ref FK
         string inviter_ref FK
         string invitee_ref FK
-        string status "pending | accepted | declined"
+        string status
         datetime sent_at
         datetime responded_at
-        datetime created_at
     }
 
     event_image {
@@ -258,7 +257,7 @@ Table that holds the information related to the users subscription with Stripe.
 
 **Columns**
 - `ref` (PK): UUID for primary key
-- `user_ref` (FK): UID foreign key for relationship with a user
+- `user_ref` (FK): UID foreign key for relationship with a `user`
 - `stripe_subscription_id`: Unique identifier for the users stripe subscription
 - `stripe_customer_id`: Unique identifier for the users stripe id
 - `plan_type`: Which plan the user is on "free | premium | enterprise"
@@ -367,8 +366,8 @@ Table that is for users who are attending an event.
 
 **Columns**
 - `ref` (PK): UUID for primary key
-- `user_ref` (FK): Foreign key relating to the user attending the event
-- `event_ref` (FK): Foreign key relating to the event in attendance
+- `user_ref` (FK): Foreign key relating to the `user` attending the event
+- `event_ref` (FK): Foreign key relating to the `event` in attendance
 - `status`: Attendee status "pending | confirmed | checked_in | no_show | cancelled"
 - `joined_at`: Date and time the user joined the event
 - `checked_in_at`: Date and time the user checks in at
@@ -402,3 +401,43 @@ CREATE INDEX idx_event_attendee_pending_checkin ON event_attendee(event_ref, sta
 - `idx_user_status_for_event` index: Finding particular user statuses for an event.
 - `idx_event_attendee_user_status` index: Finding all statuses for a user.
 - `idx_event_attendee_pending_checkin` partial index: Users who have joined by not checked in yet.
+
+### event_invitation
+Users can send invites to other users to attend their event, this table stores that invite information.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `event_ref` (FK): Foreign key for joining to an `event`
+- `inviter_ref` (FK): Foreign key for joining to `user` who is sending the invite
+- `invitee_ref` (FK): Foreign ley for joining to `user` who is receiving the invite
+- `status`: Current status of the invitation "pending | accepted | declined"
+- `sent_at`: Date and time for when the invite was sent by the inviter
+- `responded_at`: Date and time for when the invite was responded by the invitee
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX event_invitation_pk ON event_invitation(ref);
+
+-- Composite unique constraint 
+CREATE UNIQUE INDEX idx_user_event_unique ON event_invitation(event_ref, inviter_ref, invitee_ref);
+
+-- Invitee's invitations by status
+CREATE INDEX idx_event_invitation_invitee_status ON event_invitation(invitee_ref, status, sent_at DESC);
+
+-- Inviter's invitations by status
+CREATE INDEX idx_event_invitation_inviter_status ON event_invitation(inviter_ref, status, sent_at DESC);
+
+-- View the status of invitations to an event
+CREATE INDEX idx_event_invite_statuses ON event_invitation(event_ref, status, sent_at);
+
+-- Send follow up notifications to respond
+CREATE INDEX idx_event_invite_follow_up ON event_invitation(sent_at, responded_at) WHERE responded_at IS NULL AND status = 'pending';
+```
+
+**Rationale**
+- `idx_user_event_unique` composite unique constraint: ensure that an event can only have an invitation sent by a user to another user once.
+- `idx_event_invitation_invitee_status` index: Sort the invites sent out by a and sort by status.
+- `idx_event_invitation_inviter_status` index: Sort the invites received by a and sort by status.
+- `idx_event_invite_statuses` index: View the different statuses for a particular event.
+- `idx_event_invite_follow_up` partial index: View the time since an invitation was sent and if it was responded to send a follow up notification.
