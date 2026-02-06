@@ -59,6 +59,7 @@ erDiagram
         string cover_image_url
         string qr_code_hash UK
         datetime qr_code_generated_at
+        datetime qr_code_expires_at
         jsonb custom_fields
         datetime created_at
         datetime updated_at
@@ -315,6 +316,7 @@ Primary entity for an plan which contains the details for the plan created by a 
 - `cover_image_url`: URL for the image of the plan cover
 - `qr_code_hash`: Unique QR code created for the plan attendees need to scan to join face-to-face
 - `qr_code_generated_at`: Date and time QR code was generated at to have expiration
+- `qr_code_expires_at`: Date and time QR code expires so no one can scan again
 - `custom_fields`: JSON for any custom fields related to the plan
 - `created_at`: Audit log for when plan was created it
 - `updated_at`: Audit log for when updates made to the plan
@@ -349,17 +351,6 @@ CREATE UNIQUE INDEX idx_plan_qr_code ON plan(qr_code_hash) WHERE qr_code_hash IS
 - `idx_plan_qr_code` unique index: Ensure that the QR code for each plan is unique.
 
 ### plan_attendee
-plan_attendee {
-string ref PK
-string user_ref FK
-string plan_ref FK
-string status 
-datetime joined_at
-datetime checked_in_at
-datetime cancelled_at
-datetime created_at
-datetime updated_at
-}
 Table that is for users who are attending an plan.
 
 **Columns**
@@ -395,7 +386,7 @@ CREATE INDEX idx_plan_attendee_pending_checkin ON plan_attendee(plan_ref, status
 ```
 
 **Rationale**
-- `idx_user_plan_unique` composite unique index: Ensuring that only one user can only attend to an plan once.
+- `idx_user_plan_unique` composite unique index: Ensuring that only one user can only attend to a plan once.
 - `idx_user_status_for_plan` index: Finding particular user statuses for a plan.
 - `idx_plan_attendee_user_status` index: Finding all statuses for a user.
 - `idx_plan_attendee_pending_checkin` partial index: Users who have joined by not checked in yet.
@@ -467,3 +458,35 @@ CREATE INDEX idx_plan_image_coverr ON plan_image(plan_ref) WHERE is_cover = true
 - `idx_plan_images_ordered` index: Order the images returned for a plan by the display order.
 - `idx_plan_image_coverr` partial index: Return the cover image for the plan.
 
+### chat_message
+    chat_message {
+        string ref PK
+        string user_ref FK "index"
+        string plan_ref FK "index"
+        string content
+        string message_type
+        datetime edited_at
+        datetime created_at
+
+    }
+Users are able to communicate to each other for a specific plan.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `user_ref` (FK): Foreign key for joining to the `user` table
+- `plan_ref` (FK): Foreign key for joining to the `plan` table
+- `content`: Content of the message
+- `message_type`: Metadata about the type of message "text | image | system"
+- `edited_at`: Letting the users know if and when the message has been edited
+- `created_at`: Able to view order of messages based on when it was created
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX chat_message_pk ON chat_message(ref);
+
+-- Foreign key for relating to plan table
+CREATE INDEX plan_chat_messages_fk ON chat_message(plan_ref);
+
+
+```
