@@ -43,7 +43,7 @@ erDiagram
         datetime canceled_at
     }
 
-    event {
+    plan {
         string ref PK
         string category_ref FK
         string creator_ref FK
@@ -65,10 +65,10 @@ erDiagram
         datetime deleted_at
     }
 
-    event_attendee {
+    plan_attendee {
         string ref PK
         string user_ref FK "index"
-        string event_ref FK "index"
+        string plan_ref FK "index"
         string status "pending | confirmed | checked_in | no_show | cancelled"
         datetime joined_at
         datetime checked_in_at
@@ -77,9 +77,9 @@ erDiagram
         datetime updated_at
     }
 
-    event_invitation {
+    plan_invitation {
         string ref PK
-        string event_ref FK
+        string plan_ref FK
         string inviter_ref FK
         string invitee_ref FK
         string status
@@ -87,9 +87,9 @@ erDiagram
         datetime responded_at
     }
 
-    event_image {
+    plan_image {
         string ref PK
-        string event_ref FK "index"
+        string plan_ref FK
         string url
         int display_order
         boolean is_cover
@@ -98,14 +98,12 @@ erDiagram
 
     chat_message {
         string ref PK
-        string user_ref FK "index"
-        string event_ref FK "index"
+        string user_ref FK
+        string plan_ref FK
         string content
-        string message_type "text | image | system"
-        boolean edited
+        string message_type
         datetime edited_at
         datetime created_at
-        datetime deleted_at
     }
 
     category {
@@ -139,7 +137,7 @@ erDiagram
     notification {
         string ref PK
         string user_ref FK "index"
-        string type "event_invite | event_reminder | message | system"
+        string type "plan_invite | plan_reminder | message | system"
         string title
         string body
         jsonb data
@@ -153,7 +151,7 @@ erDiagram
     report {
         string ref PK
         string reporter_ref FK
-        string reported_event_ref FK
+        string reported_plan_ref FK
         string reported_user_ref FK
         string reported_message_ref FK
         string reason
@@ -173,21 +171,21 @@ erDiagram
 
     user ||--|| user_profile : "has"
     user ||--o| subscription : "subscribed to"
-    user ||--o{ event : "created"
-    user ||--o{ event_attendee : "attends"
-    user ||--o{ event_invitation : "sends"
-    user ||--o{ event_invitation : "receives"
+    user ||--o{ plan : "created"
+    user ||--o{ plan_attendee : "attends"
+    user ||--o{ plan_invitation : "sends"
+    user ||--o{ plan_invitation : "receives"
     user ||--o{ chat_message : "writes"
     user ||--o{ notification : "receives"
     user ||--o{ user_interest : "has"
     user ||--o{ user_relationship : "initates"
     user ||--o{ report : "files"
 
-    event ||--o{ event_attendee : "has"
-    event ||--o{ event_invitation : "for"
-    event ||--o{ event_image : "has"
-    event ||--o{ chat_message : "contains"
-    event ||--|| category : "belongs_to"
+    plan ||--o{ plan_attendee : "has"
+    plan ||--o{ plan_invitation : "for"
+    plan ||--o{ plan_image : "has"
+    plan ||--o{ chat_message : "contains"
+    plan ||--|| category : "belongs_to"
 
     interest ||--o{ user_interest : "tagged_to"
 ```
@@ -260,11 +258,11 @@ Table that holds the information related to the users subscription with Stripe.
 - `user_ref` (FK): UID foreign key for relationship with a `user`
 - `stripe_subscription_id`: Unique identifier for the users stripe subscription
 - `stripe_customer_id`: Unique identifier for the users stripe id
-- `plan_type`: Which plan the user is on "free | premium | enterprise"
+- `plan_type`: Which subscription plan the user is on "free | premium | enterprise"
 - `status`: The status of their subscription "active | canceled | past_due | unpaid"
-- `current_period_start`: Starting date of the current plan
-- `current_period_end`: End date of the current plan
-- `cancled_at`: Date of canceled plan or NULL
+- `current_period_start`: Starting date of the current subscription plan
+- `current_period_end`: End date of the current subscription plan
+- `cancled_at`: Date of canceled subscription plan or NULL
 
 **Indexes**
 ```sql
@@ -298,63 +296,63 @@ CREATE INDEX idx_subscription_past_due ON subscription(status, updated_at) WHERE
 - `idx_subscription_expiring` partial index: Finding active subscriptions period ending.
 - `idx_subscription_past_due` partial index: Finding subscriptions past due and checking `updated_at` for any that haven't been retrieved recently.
 
-### event
-Primary entity for an event which contains the details for the event created by a user.
+### plan
+Primary entity for an plan which contains the details for the plan created by a user.
 
 **Columns**
 - `ref` (PK): UUID for the primary key
 - `category_ref` (FK): Foreign key which creates relation to `category` table
-- `creator_ref` (FK): Foreign key which creates the relation to `user` table for who created the event
-- `title`: Title for the event
-- `description`: Description for the event
-- `location_name`: Human readable format for the location of the event
-- `location_point`: Geometric point data for the location of the event
+- `creator_ref` (FK): Foreign key which creates the relation to `user` table for who created the plan
+- `title`: Title for the plan
+- `description`: Description for the plan
+- `location_name`: Human readable format for the location of the plan
+- `location_point`: Geometric point data for the location of the plan
 - `max_attendees`: Max number of users who can sign up and attend
-- `visibility`: Which type of users can view the event "public | private | friends_only"
-- `status`: What status the event is currently in "draft | published | cancelled | completed"
-- `start_time`: Date and time event starts
-- `end_time`: Date and time event ends
-- `cover_image_url`: URL for the image of the event cover
-- `qr_code_hash`: Unique QR code created for the event attendees need to scan to join face-to-face
+- `visibility`: Which type of users can view the plan "public | members | premium | friends_only"
+- `status`: What status the plan is currently in "draft | published | cancelled | completed"
+- `start_time`: Date and time plan starts
+- `end_time`: Date and time plan ends
+- `cover_image_url`: URL for the image of the plan cover
+- `qr_code_hash`: Unique QR code created for the plan attendees need to scan to join face-to-face
 - `qr_code_generated_at`: Date and time QR code was generated at to have expiration
-- `custom_fields`: JSON for any custom fields related to the event
-- `created_at`: Audit log for when event was created it
-- `updated_at`: Audit log for when updates made to the event
-- `deleted_at`: Audit log for when event is deleted
+- `custom_fields`: JSON for any custom fields related to the plan
+- `created_at`: Audit log for when plan was created it
+- `updated_at`: Audit log for when updates made to the plan
+- `deleted_at`: Audit log for when plan is deleted
 
 **Indexes**
 ```sql
 -- Primary key (auto-created)
-CREATE UNIQUE INDEX event_pkey ON event(ref);
+CREATE UNIQUE INDEX plan ON plan(ref);
 
 -- Foreign key indexes (for joins)
-CREATE INDEX idx_event_category_fk ON event(category_ref);
-CREATE INDEX idx_event_creator_fk ON event(creator_ref);
+CREATE INDEX idx_plan_category_fk ON plan(category_ref);
+CREATE INDEX idx_plan_creator_fk ON plan(creator_ref);
 
--- Event discovery
-CREATE INDEX idx_event_discovery ON event(status, start_time) WHERE deleted_at IS NULL;
+-- Plan discovery
+CREATE INDEX idx_plan_discovery ON plan(status, start_time) WHERE deleted_at IS NULL;
 
 -- Category browsing
-CREATE INDEX idx_event_category ON event(category_ref, start_time) WHERE deleted_at IS NULL;
+CREATE INDEX idx_plan_category ON plan(category_ref, start_time) WHERE deleted_at IS NULL;
 
--- Find event locations that are active (map view)
-CREATE INDEX idx_active_event_location ON event USING GIST (location_point) WHERE deleted_at IS NULL AND status = 'published';
+-- Find plan locations that are active (map view)
+CREATE INDEX idx_active_plan_location ON plan USING GIST (location_point) WHERE deleted_at IS NULL AND status = 'published';
 
 -- QR code verification for attendee check in
-CREATE UNIQUE INDEX idx_event_qr_code ON event(qr_code_hash) WHERE qr_code_hash IS NOT NULL;
+CREATE UNIQUE INDEX idx_plan_qr_code ON plan(qr_code_hash) WHERE qr_code_hash IS NOT NULL;
 ```
 
 **Rationale**
-- `idx_event_discovery` partial index: Finding events that are published and starting soon that are also not deleted.
-- `idx_event_category` partial index: Find events under a certain category that are not deleted.
-- `idx_active_event_location` GIST index: Find the geo location of an event quickly for location searching for active events.
-- `idx_event_qr_code` unique index: Ensure that the QR code for each event is unique.
+- `idx_plan_discovery` partial index: Finding plans that are published and starting soon that are also not deleted.
+- `idx_plan_category` partial index: Find plans under a certain category that are not deleted.
+- `idx_active_plan_location` GIST index: Find the geo location of an plan quickly for location searching for active plans.
+- `idx_plan_qr_code` unique index: Ensure that the QR code for each plan is unique.
 
-### event_attendee
-event_attendee {
+### plan_attendee
+plan_attendee {
 string ref PK
 string user_ref FK
-string event_ref FK
+string plan_ref FK
 string status 
 datetime joined_at
 datetime checked_in_at
@@ -362,52 +360,52 @@ datetime cancelled_at
 datetime created_at
 datetime updated_at
 }
-Table that is for users who are attending an event.
+Table that is for users who are attending an plan.
 
 **Columns**
 - `ref` (PK): UUID for primary key
-- `user_ref` (FK): Foreign key relating to the `user` attending the event
-- `event_ref` (FK): Foreign key relating to the `event` in attendance
+- `user_ref` (FK): Foreign key relating to the `user` attending the plan
+- `plan_ref` (FK): Foreign key relating to the `plan` in attendance
 - `status`: Attendee status "pending | confirmed | checked_in | no_show | cancelled"
-- `joined_at`: Date and time the user joined the event
+- `joined_at`: Date and time the user joined the plan
 - `checked_in_at`: Date and time the user checks in at
-- `cancelled_at`: Date and time the user cancels attending event
+- `cancelled_at`: Date and time the user cancels attending plan
 - `created_at`: Audit for when the user selects attending
 - `updated_at`: Date and time for when a user updates their attendance status
 
 **Indexes**
 ```sql
 -- Primary key (auto-created)
-CREATE UNIQUE INDEX event_attendee_pk ON event_attendee(ref);
+CREATE UNIQUE INDEX plan_attendee_pk ON plan_attendee(ref);
 
--- Foreign key for relating to event
-CREATE INDEX idx_event_ref_fk ON event_attendee(event_ref);
+-- Foreign key for relating to plan
+CREATE INDEX idx_plan_ref_fk ON plan_attendee(plan_ref);
 
 -- Composite Unique Constraint 
-CREATE UNIQUE INDEX idx_user_event_unique ON event_attendee(event_ref, user_ref);
+CREATE UNIQUE INDEX idx_user_plan_unique ON plan_attendee(plan_ref, user_ref);
 
--- View all users with a particular status for an event
-CREATE INDEX idx_user_status_for_event ON event_attendee(event_ref, status);
+-- View all users with a particular status for an plan
+CREATE INDEX idx_user_status_for_plan ON plan_attendee(plan_ref, status);
 
 -- View all statuses for user
-CREATE INDEX idx_event_attendee_user_status ON event_attendee(user_ref, status);
+CREATE INDEX idx_plan_attendee_user_status ON plan_attendee(user_ref, status);
 
 -- Attendees pending check-in
-CREATE INDEX idx_event_attendee_pending_checkin ON event_attendee(event_ref, status) WHERE checked_in_at IS NULL AND status IN ('confirmed', 'pending');
+CREATE INDEX idx_plan_attendee_pending_checkin ON plan_attendee(plan_ref, status) WHERE checked_in_at IS NULL AND status IN ('confirmed', 'pending');
 ```
 
 **Rationale**
-- `idx_user_event_unique` composite unique index: Ensuring that only one user can only attend to an event once.
-- `idx_user_status_for_event` index: Finding particular user statuses for an event.
-- `idx_event_attendee_user_status` index: Finding all statuses for a user.
-- `idx_event_attendee_pending_checkin` partial index: Users who have joined by not checked in yet.
+- `idx_user_plan_unique` composite unique index: Ensuring that only one user can only attend to an plan once.
+- `idx_user_status_for_plan` index: Finding particular user statuses for a plan.
+- `idx_plan_attendee_user_status` index: Finding all statuses for a user.
+- `idx_plan_attendee_pending_checkin` partial index: Users who have joined by not checked in yet.
 
-### event_invitation
-Users can send invites to other users to attend their event, this table stores that invite information.
+### plan_invitation
+Users can send invites to other users to attend their plan, this table stores that invite information.
 
 **Columns**
 - `ref` (PK): UUID primary key
-- `event_ref` (FK): Foreign key for joining to an `event`
+- `plan_ref` (FK): Foreign key for joining to a `plan`
 - `inviter_ref` (FK): Foreign key for joining to `user` who is sending the invite
 - `invitee_ref` (FK): Foreign ley for joining to `user` who is receiving the invite
 - `status`: Current status of the invitation "pending | accepted | declined"
@@ -417,62 +415,55 @@ Users can send invites to other users to attend their event, this table stores t
 **Indexes**
 ```sql
 -- Primary key (auto-created)
-CREATE UNIQUE INDEX event_invitation_pk ON event_invitation(ref);
+CREATE UNIQUE INDEX plan_invitation_pk ON plan_invitation(ref);
 
 -- Composite unique constraint 
-CREATE UNIQUE INDEX idx_user_event_unique ON event_invitation(event_ref, inviter_ref, invitee_ref);
+CREATE UNIQUE INDEX idx_user_plan_unique ON plan_invitation(plan_ref, inviter_ref, invitee_ref);
 
 -- Invitee's invitations by status
-CREATE INDEX idx_event_invitation_invitee_status ON event_invitation(invitee_ref, status, sent_at DESC);
+CREATE INDEX idx_plan_invitation_invitee_status ON plan_invitation(invitee_ref, status, sent_at DESC);
 
 -- Inviter's invitations by status
-CREATE INDEX idx_event_invitation_inviter_status ON event_invitation(inviter_ref, status, sent_at DESC);
+CREATE INDEX idx_plan_invitation_inviter_status ON plan_invitation(inviter_ref, status, sent_at DESC);
 
--- View the status of invitations to an event
-CREATE INDEX idx_event_invite_statuses ON event_invitation(event_ref, status, sent_at);
+-- View the status of invitations to a plan
+CREATE INDEX idx_plan_invite_statuses ON plan_invitation(plan_ref, status, sent_at);
 
 -- Send follow up notifications to respond
-CREATE INDEX idx_event_invite_follow_up ON event_invitation(sent_at, responded_at) WHERE responded_at IS NULL AND status = 'pending';
+CREATE INDEX idx_plan_invite_follow_up ON plan_invitation(sent_at, responded_at) WHERE responded_at IS NULL AND status = 'pending';
 ```
 
 **Rationale**
-- `idx_user_event_unique` composite unique constraint: ensure that an event can only have an invitation sent by a user to another user once.
-- `idx_event_invitation_invitee_status` index: Sort the invites sent out by a and sort by status.
-- `idx_event_invitation_inviter_status` index: Sort the invites received by a and sort by status.
-- `idx_event_invite_statuses` index: View the different statuses for a particular event.
-- `idx_event_invite_follow_up` partial index: View the time since an invitation was sent and if it was responded to send a follow up notification.
+- `idx_user_plan_unique` composite unique constraint: ensure that an plan can only have an invitation sent by a user to another user once.
+- `idx_plan_invitation_invitee_status` index: Sort the invites sent out by a and sort by status.
+- `idx_plan_invitation_inviter_status` index: Sort the invites received by a and sort by status.
+- `idx_plan_invite_statuses` index: View the different statuses for a particular plan.
+- `idx_plan_invite_follow_up` partial index: View the time since an invitation was sent and if it was responded to send a follow up notification.
 
-### event_image
-    event_image {
-        string ref PK
-        string event_ref FK "index"
-        string url
-        int display_order
-        boolean is_cover
-        datetime created_at
-    }
-Users can upload images for an event to show what is going on.
+### plan_image
+Users can upload images for an plan to show what is going on.
 
 **Columns**
 - `ref` (PK): UUID primary key
-- `event_ref` (FK): Foreign key to join to the `event` table
+- `plan_ref` (FK): Foreign key to join to the `plan` table
 - `url`: URL for where the image is hosted
 - `display_order`: The order in which the images are displayed on the frontend
-- `is_cover`: If the image is the cover picture for the `event`
+- `is_cover`: If the image is the cover picture for the `plan`
 - `created_at`: Audit log for creation
 
 **Indexes**
 ```sql
 -- Primary key (auto-created)
-CREATE UNIQUE INDEX event_image_pk ON event_image(ref);
+CREATE UNIQUE INDEX plan_image_pk ON plan_image(ref);
 
--- View in order the images for an event
-CREATE INDEX idx_event_images_ordered ON event_image(event_ref, display_order);
+-- View in order the images for an plan
+CREATE INDEX idx_plan_images_ordered ON plan_image(plan_ref, display_order);
 
 -- View the cover image
-CREATE INDEX idx_event_image_coverr ON event_image(event_ref) WHERE is_cover = true;
+CREATE INDEX idx_plan_image_coverr ON plan_image(plan_ref) WHERE is_cover = true;
 ```
 
 **Rationale**
-- `idx_event_images_ordered` index: Order the images returned for an event by the display order.
-- `idx_event_image_coverr` partial index: Return the cover image for the event.
+- `idx_plan_images_ordered` index: Order the images returned for a plan by the display order.
+- `idx_plan_image_coverr` partial index: Return the cover image for the plan.
+
