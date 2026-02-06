@@ -441,3 +441,38 @@ CREATE INDEX idx_event_invite_follow_up ON event_invitation(sent_at, responded_a
 - `idx_event_invitation_inviter_status` index: Sort the invites received by a and sort by status.
 - `idx_event_invite_statuses` index: View the different statuses for a particular event.
 - `idx_event_invite_follow_up` partial index: View the time since an invitation was sent and if it was responded to send a follow up notification.
+
+### event_image
+    event_image {
+        string ref PK
+        string event_ref FK "index"
+        string url
+        int display_order
+        boolean is_cover
+        datetime created_at
+    }
+Users can upload images for an event to show what is going on.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `event_ref` (FK): Foreign key to join to the `event` table
+- `url`: URL for where the image is hosted
+- `display_order`: The order in which the images are displayed on the frontend
+- `is_cover`: If the image is the cover picture for the `event`
+- `created_at`: Audit log for creation
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX event_image_pk ON event_image(ref);
+
+-- View in order the images for an event
+CREATE INDEX idx_event_images_ordered ON event_image(event_ref, display_order);
+
+-- View the cover image
+CREATE INDEX idx_event_image_coverr ON event_image(event_ref) WHERE is_cover = true;
+```
+
+**Rationale**
+- `idx_event_images_ordered` index: Order the images returned for an event by the display order.
+- `idx_event_image_coverr` partial index: Return the cover image for the event.
