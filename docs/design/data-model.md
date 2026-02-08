@@ -137,12 +137,11 @@ erDiagram
 
     notification {
         string ref PK
-        string user_ref FK "index"
-        string type "plan_invite | plan_reminder | message | system"
+        string user_ref FK
+        string type
         string title
         string body
         jsonb data
-        boolean read
         string action_url
         datetime read_at
         datetime created_at 
@@ -596,3 +595,43 @@ CHECK (type != 'friend' OR user_ref < related_user_ref);
         - `'rejected'`: Declined friend requests
 
 - **Partial Indexes**: Separate unique constraints for bidirectional vs unidirectional relationships enable correct semantics for each type while maintaining query performance.
+
+### notification
+Table for the notifications that will be received by the `user`. 1:M relationship where a `user` can have many `notifications`.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `user_ref` (FK): Foreign key joining to the `user` table
+- `type`: Type of notification received "plan_event | chat_event | system"
+- `title`: Header for the notification
+- `body`: Description of notification
+- `data`: JSON containing extra data if needed "{
+  eventType: 'plan_joined' | 'plan_cancelled' | 'plan_updated' | ...
+  planId: '...',
+  actorId: '...',  // Who triggered this notification
+  ...
+  }"
+- `action_url`: URL if there is redirection needed for actioning the notification
+- `read_at`: Date time the notification was read by the user
+- `created_at`: Date and time the notification was sent to the user
+- `deleted_at`: Audit for when the user deletes the notification
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX notification_pk ON notification(ref);
+
+-- Foreign key index for `user` to view all notifications
+CREATE INDEX idx_users_notifications ON notification(user_ref, created_at DESC) WHERE deleted_at IS NULL;
+
+-- Partial index for unread notifications for the badge
+CREATE INDEX idx_users_unread_notifications ON notification(user_ref, created_at DESC) WHERE read_at IS NULL FALSE AND deleted_at IS NULL;
+
+-- Filter notifications by type
+CREATE INDEX idx_users_notification_type ON notification(user_ref, type, created_at DESC) WHERE deleted_at IS NULL;
+```
+
+**Rationale**
+- `idx_users_notifications` index: Foreign key index for to get all notifications assigned to a user and order by recent.
+- `idx_users_unread_notifications` partial index: Retrieve only the unread notifications for a user. This can be shown in the notification badge.
+- `idx_users_notification_type` partial index: Allow user to filter the notifications by a specific type. 
