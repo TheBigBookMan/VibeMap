@@ -165,8 +165,11 @@ erDiagram
     feature_flag {
         string ref PK
         string key UK
+        string description
         boolean enabled
         jsonb rules
+        datetime created_at
+        datetime updated_at
     }
 
     user ||--|| user_profile : "has"
@@ -688,3 +691,27 @@ CREATE INDEX idx_report_status ON report(status, created_at DESC);
 - `idx_reported_user` partial index: View the reports about the `user` entity.
 - `idx_reported_message` partial index: View the reports about the `chat_message` entity.
 - `idx_report_status` index: View all reports by status for moderators.
+
+### feature_flag
+Table where feature flags are kept.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `key` (UK): Unique string identifier for the feature (e.g., `'ml_moderation_enabled'`, `'premium_plans_enabled'`)
+- `description`: What this feature flag controls
+- `enabled`: Global on/off switch for the feature
+- `rules`: JSONB object for advanced targeting rules (percentage rollouts, user-specific overrides, etc.)
+- `created_at`: Audit for creation
+- `updated_at`: When feature flag changed
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX feature_flag_pk ON feature_flag(ref);
+
+-- Unique constraint on key
+CREATE UNIQUE INDEX feature_flag_key_uk ON feature_flag(key);
+
+-- Partial index for showing all enabled flags
+CREATE INDEX idx_enabled_feature_flags ON feature_flag(enabled) WHERE enabled IS TRUE;
+```
