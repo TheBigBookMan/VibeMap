@@ -481,3 +481,21 @@ CREATE INDEX idx_plan_chat_messages ON chat_message(plan_ref, created_at DESC) W
 
 **Rationale**
 - `idx_plan_chat_messages` partial index: Index to retrieve all chat messages in a plan and order by `created_at` to show by recency.
+
+### category
+Table which represents categories for the plans to fall under, plan can only have 1 category.
+
+**Columns**
+- `ref` (PK): UUID for the primary key
+- `name` (UK): Unique category name
+- `description`: Explains what the category is
+- `icon_url`: URL for the icon
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX category_pk ON category(ref);
+```
+
+**Rationale**
+Table will be very small with less than 20 categories, no indexing needed.
