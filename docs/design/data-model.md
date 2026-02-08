@@ -516,3 +516,23 @@ CREATE UNIQUE INDEX interest_pk ON interest(ref);
 
 **Rationale**
 Will have less than 40 items in the interest table so don't need to index.
+
+### user_interest
+Joining table for the M:M relationship between `user` and `interest` as a user can have many interests.
+
+**Columns**
+- `user_ref` (PK) (FK): Composite key relating to the `user` table
+- `interest_ref` (PK) (FK): Composite key relating to the `interest` table
+
+**Indexes**
+```sql
+-- Primary key composite (auto-created)
+CREATE UNIQUE INDEX user_interest_unique_pk ON user_interest(user_ref, interest_ref)
+;
+-- Users that selected an interest
+CREATE INDEX idx_interest_users ON user_interest(interest_ref, user_ref);
+```
+
+**Rationale**
+- `user_interest_unique_pk` primary key composite unique index: To find the interests that a particular user has.
+- `idx_interest_users` index: A user can only have one version of the interest.
