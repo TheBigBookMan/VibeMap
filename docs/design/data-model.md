@@ -127,10 +127,10 @@ erDiagram
 
     user_relationship {
         string ref PK
-        string user_ref FK "index"
-        string related_user_ref FK "index:
-        string type "friend | blocked | following"
-        string status "pending | accepted | blocked"
+        string user_ref FK
+        string related_user_ref FK
+        string type
+        string status
         datetime created_at
         datetime updated_at
     }
@@ -536,3 +536,63 @@ CREATE INDEX idx_interest_users ON user_interest(interest_ref, user_ref);
 **Rationale**
 - `user_interest_unique_pk` primary key composite unique index: To find the interests that a particular user has.
 - `idx_interest_users` index: A user can only have one version of the interest.
+
+### user_relationship
+Joining table for the `user` to be able to have friend and receive friend.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `user_ref` (FK): Foreign key to `user` table (initiator for unidirectional, normalized smaller UUID for bidirectional)
+- `related_user_ref` (FK): Foreign key to `user` table (recipient for unidirectional, normalized larger UUID for bidirectional)
+- `type`: The type of relationship - `'friend' | 'block' | 'follow'`
+- `status`: Current state of the relationship - `'pending' | 'accepted' | 'rejected'`
+- `created_at`: Timestamp when the relationship was created
+- `updated_at`: Timestamp when the relationship status last changed
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX user_relationship_pk ON user_relationship(ref);
+
+-- Unique constraint for bidirectional relationships (friends)
+-- Normalizes the pair by always storing smaller UUID first
+CREATE UNIQUE INDEX idx_friendship_unique ON user_relationship(LEAST(user_ref, related_user_ref), GREATEST(user_ref, related_user_ref), type) WHERE type = 'friend';
+
+-- Unique constraint for unidirectional relationships (block, follow)
+-- Allows both directions to exist (Alice blocks Bob, Bob blocks Alice)
+CREATE UNIQUE INDEX idx_unidirectional_unique ON user_relationship(user_ref, related_user_ref, type) WHERE type IN ('block', 'follow');
+
+-- Query: Get all relationships for a user (sent and received)
+CREATE INDEX idx_user_relationships ON user_relationship(user_ref, type, status);
+
+-- Query: Get all relationships targeting a user (received)
+CREATE INDEX idx_related_user_relationships ON user_relationship(related_user_ref, type, status);
+```
+
+**Constraints**
+```sql
+-- Prevent self-relationships (users can't friend/block/follow themselves)
+ALTER TABLE user_relationship 
+ADD CONSTRAINT no_self_relationship 
+CHECK (user_ref != related_user_ref);
+
+-- Enforce normalization for bidirectional relationships
+-- For 'friend' type, user_ref must always be < related_user_ref
+ALTER TABLE user_relationship
+ADD CONSTRAINT friendship_normalization
+CHECK (type != 'friend' OR user_ref < related_user_ref);
+```
+
+**Rationale**
+- **Bidirectional Relationships (Friends)**: Stored as a single normalized row where `user_ref < related_user_ref`. This prevents duplicate rows representing the same friendship and ensures a single source of truth for the relationship status.
+
+- **Unidirectional Relationships (Blocks, Follows)**: Allow separate rows in each direction. Alice blocking Bob doesn't prevent Bob from blocking Alice.
+
+- **Type + Status Separation**:
+    - `type` defines the relationship category
+    - `status` tracks the lifecycle:
+        - `'pending'`: Friend requests awaiting acceptance
+        - `'accepted'`: Active friendships, confirmed blocks/follows
+        - `'rejected'`: Declined friend requests
+
+- **Partial Indexes**: Separate unique constraints for bidirectional vs unidirectional relationships enable correct semantics for each type while maintaining query performance.
