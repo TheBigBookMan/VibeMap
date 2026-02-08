@@ -499,3 +499,20 @@ CREATE UNIQUE INDEX category_pk ON category(ref);
 
 **Rationale**
 Table will be very small with less than 20 categories, no indexing needed.
+
+### interest
+Table for interests which a user can say they have, to help with suggesting categories or finding friends with similar interests.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `name` (UK): The unique name for the interest
+- `description`: More information on the interest
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX interest_pk ON interest(ref);
+```
+
+**Rationale**
+Will have less than 40 items in the interest table so don't need to index.
