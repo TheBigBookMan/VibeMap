@@ -156,7 +156,7 @@ erDiagram
         string reported_message_ref FK
         string reason
         string description
-        string status "pending | reviewed | resolved"
+        string status
         datetime created_at
         datetime resolved_at
         datetime updated_at
@@ -635,3 +635,56 @@ CREATE INDEX idx_users_notification_type ON notification(user_ref, type, created
 - `idx_users_notifications` index: Foreign key index for to get all notifications assigned to a user and order by recent.
 - `idx_users_unread_notifications` partial index: Retrieve only the unread notifications for a user. This can be shown in the notification badge.
 - `idx_users_notification_type` partial index: Allow user to filter the notifications by a specific type. 
+
+### report
+Table where reports made by a `user` about another user is stored.
+
+**Columns**
+- `ref` (PK): UUID primary key
+- `reporter_ref` (FK): Foreign key relating to the `user` table for who is making the report
+- `reported_plan_ref` (FK): Foreign key relating to `plan` table if the report is about a plan
+- `reported_user_ref` (FK): Foreign key relating to `user` table if the report is about a user
+- `reported_message_ref` (FK): Foreign key relating to `chat_message` table if the report is about a message
+- `reason`: Explaining why the report
+- `description`: More in depth explanation of report
+- `status`: Report status "pending | reviewed | resolved"
+- `created_at`: Audit for when the report was created
+- `resolved_at`: Date and time for when the report is resolved
+- `updated_at`: Date and time for any updates made to the report
+
+**Indexes**
+```sql
+-- Primary key (auto-created)
+CREATE UNIQUE INDEX report_pk ON report(ref);
+
+-- Foreign key index to a user
+CREATE INDEX idx_user_reports ON report(reporter_ref, created_at DESC);
+
+-- Foreign key index for plan
+CREATE INDEX idx_reported_plan ON report(reported_plan_ref, created_at DESC) WHERE reported_plan_ref IS NOT NULL;
+
+-- Foreign key index for user
+CREATE INDEX idx_reported_user ON report(reported_user_ref, created_at DESC) WHERE reported_user_ref IS NOT NULL;
+
+-- Foreign key index for message
+CREATE INDEX idx_reported_message ON report(reported_message_ref, created_at DESC) WHERE reported_message_ref IS NOT NULL;
+
+-- Prevent duplicate active reports (one report per user per plan while unresolved)
+CREATE UNIQUE INDEX idx_unique_plan_report ON report(reporter_ref, reported_plan_ref) WHERE reported_plan_ref IS NOT NULL AND status != 'resolved';
+
+-- Prevent duplicate active reports (one report per user per user while unresolved)
+CREATE UNIQUE INDEX idx_unique_user_report ON report(reporter_ref, reported_user_ref) WHERE reported_user_ref IS NOT NULL AND status != 'resolved';
+
+-- Prevent duplicate active reports (one report per user per message while unresolved)
+CREATE UNIQUE INDEX idx_unique_message_report ON report(reporter_ref, reported_message_ref) WHERE reported_message_ref IS NOT NULL AND status != 'resolved';
+
+-- View reports based on status
+CREATE INDEX idx_report_status ON report(status, created_at DESC);
+```
+
+**Rationale**
+- `idx_user_reports` index: View all reports made my a `user`.
+- `idx_reported_plan` partial index: View the reports about the `plan` entity.
+- `idx_reported_user` partial index: View the reports about the `user` entity.
+- `idx_reported_message` partial index: View the reports about the `chat_message` entity.
+- `idx_report_status` index: View all reports by status for moderators.
