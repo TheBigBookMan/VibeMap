@@ -103,7 +103,7 @@ erDiagram
         string plan_ref FK
         string content
         string message_type
-        datetime edited_at
+        string status
         datetime created_at
     }
 
@@ -459,16 +459,6 @@ CREATE INDEX idx_plan_image_coverr ON plan_image(plan_ref) WHERE is_cover = true
 - `idx_plan_image_coverr` partial index: Return the cover image for the plan.
 
 ### chat_message
-    chat_message {
-        string ref PK
-        string user_ref FK "index"
-        string plan_ref FK "index"
-        string content
-        string message_type
-        datetime edited_at
-        datetime created_at
-
-    }
 Users are able to communicate to each other for a specific plan.
 
 **Columns**
@@ -477,7 +467,7 @@ Users are able to communicate to each other for a specific plan.
 - `plan_ref` (FK): Foreign key for joining to the `plan` table
 - `content`: Content of the message
 - `message_type`: Metadata about the type of message "text | image | system"
-- `edited_at`: Letting the users know if and when the message has been edited
+- `status`: Soft deletion of messages if moderation removes "visible | deleted"
 - `created_at`: Able to view order of messages based on when it was created
 
 **Indexes**
@@ -485,8 +475,9 @@ Users are able to communicate to each other for a specific plan.
 -- Primary key (auto-created)
 CREATE UNIQUE INDEX chat_message_pk ON chat_message(ref);
 
--- Foreign key for relating to plan table
-CREATE INDEX plan_chat_messages_fk ON chat_message(plan_ref);
-
-
+-- Retrieve all chat messages for a plan order latest
+CREATE INDEX idx_plan_chat_messages ON chat_message(plan_ref, created_at DESC) WHERE status = 'visible';
 ```
+
+**Rationale**
+- `idx_plan_chat_messages` partial index: Index to retrieve all chat messages in a plan and order by `created_at` to show by recency.
