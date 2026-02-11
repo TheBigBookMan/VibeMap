@@ -229,3 +229,15 @@ Different endpoints require different authorization levels:
 - Hashed with Argon2
 
 ## Authorization
+Using various authorization patterns to ensure control access to particular resources and actions.
+
+### Role-Based Access Control (RBAC)
+Users are assigned a role which has rules associated with them
+
+**Roles**
+| Role | Description | System Access |
+|------|-------------|---------------|
+| `user` | Standard user | Create plans, join plans, send messages, file reports |
+| `moderator` | Content moderator | All user permissions + view/resolve reports, hide content, view moderation decisions |
+| `admin` | System administrator | All moderator permissions + ban users, manage feature flags, view audit logs |
+
