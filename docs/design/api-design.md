@@ -108,6 +108,8 @@ GET /reports?limit=50&offset=100 # Offset based
 GET /plans?q=coffee # Free text search in title/description
 ```
 
+---
+
 ## Authentication
 Using **JSON Web Token (JWT) bearer tokens** to handle API authentication.
 
@@ -228,6 +230,8 @@ Different endpoints require different authorization levels:
 - At least one number
 - Hashed with Argon2
 
+---
+
 ## Authorization
 Using various authorization patterns to ensure control access to particular resources and actions.
 
@@ -323,6 +327,8 @@ X-User-Tier: premium
 X-User-Role: user
 X-Email-Verified: true
 ```
+
+---
 
 ## Error Responses
 Use a consistent error response format across all endpoints. All endpoints return appropriate error codes and readable messages.
@@ -583,6 +589,8 @@ Retry-After: 42
 | Error by code | Track specific issues | INTERNAL_ERROR > 5/min |
 | Error by endpoint | Identify problematic endpoints | Any endpoint > 10% error rate |
 
+---
+
 ## Pagination
 This project uses cursor-based pagination for feed-style endpoints. Simpler navigation uses offset-based pagination.
 
@@ -771,3 +779,21 @@ Response: 400 Bad Request
   }
 }
 ```
+
+---
+
+## API Versioning
+URL based versioning to manage API changes over time. All API endpoints are prefixed with a version number- `/api/v1/` for any backwards compatability.
+
+### Versioning Strategy
+**Path Versioning**
+All API endpoints follow this pattern:
+`/v{version}/{resource}`
+
+**Why URL Versioning**
+| Approach | Pros | Cons |
+|----------|------|------|
+| **URL Path** (`/v1/plans`) | Clear, explicit, cacheable, easy to route | Requires URL changes |
+| **Header** (`API-Version: 1`) | Clean URLs | Not cacheable, harder to test |
+| **Query Param** (`/plans?v=1`) | Flexible | Easily forgotten, breaks caching |
+| **Content Negotiation** (`Accept: application/vnd.vibemeet.v1+json`) | RESTful | X Complex, poor tooling support |
