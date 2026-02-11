@@ -821,8 +821,8 @@ Different user tiers have different rate limits:
 | **Admin** | Unlimited | No rate limits |
 
 ### Rate Limit Strategy for Endpoint Category
-#### Authentication Endpoints
 
+#### Authentication Endpoints
 Strict limits to prevent brute force attacks and credential stuffing.
 
 | Endpoint | Limit | Window | Tier Applied |
@@ -855,7 +855,6 @@ Strict limits to prevent brute force attacks and credential stuffing.
 ```
 
 #### Read Endpoints (GET)
-
 Generous limits for browsing and discovery.
 
 | Endpoint | Free User | Premium User | Window |
@@ -870,3 +869,27 @@ Generous limits for browsing and discovery.
 - Read operations are less expensive than writes
 - Higher limits encourage browsing and engagement
 - Premium users get double the limits for better UX
+
+#### Write Endpoints (POST, PATCH, DELETE)
+Stricter limits to prevent spam and abuse.
+
+| Endpoint | Free User | Premium User | Window |
+|----------|-----------|--------------|--------|
+| `POST /plans` | 10 requests | 20 requests | 1 hour |
+| `PATCH /plans/:id` | 20 requests | 40 requests | 1 hour |
+| `DELETE /plans/:id` | 10 requests | 20 requests | 1 hour |
+| `POST /plans/:id/join` | 20 requests | 40 requests | 1 hour |
+| `POST /plans/:id/leave` | 20 requests | 40 requests | 1 hour |
+| `POST /plans/:id/messages` | 100 requests | 200 requests | 1 hour |
+| `PATCH /users/me` | 20 requests | 40 requests | 1 hour |
+| `POST /reports` | 10 requests | 20 requests | 1 hour |
+
+**Additional Business Logic Limits:**
+- Plan creation quota: Free users limited to 5 plans/month (enforced separately from rate limits)
+- Message length: Max 2000 characters
+- Image uploads: Max 5MB per file
+
+**Rationale:**
+- Prevents spam plan creation
+- Limits chat message flooding
+- Reduces abuse of report system
