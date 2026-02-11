@@ -34,3 +34,24 @@ Use the standard HTTP verbs for indicating the action being made:
 - Use `PUT` only when replacing the entire resource
 - `POST` to collections creates new items
 - `POST` to a specific resource performs actions
+
+### URL Structure
+**Pattern:** `/{resourece}/{id}/{sub-resource}/{id}`
+
+**Examples**
+```http
+# Users
+POST /users # Create new user
+GET /users/:id # Get user profile
+PATCH /users/:id # Update part of user profile
+DELETE /users/:id # Delete user profile
+
+# Nested Resource (Plan attendees)
+GET /plans/:id/attendees # List plan attendees
+POST /plans/:id/attendees # Join a plan
+DELETE /plans/:id/attendees/:userId # Remove an attendee
+
+# Notifications
+GET /users/:id/notifications # Get all notifications for user
+PATCH /users/:id/notifications/:notificationId/read # Mark notification as read
+```
