@@ -124,3 +124,13 @@ sequenceDiagram
         Client->>API: API Requests "Authorization: Bearer <custom_jwt>"
         API->>Client: Protected Resource
 ```
+
+### Token Types
+Different tokens are used for specific purposes, ensuring higher level of security.
+
+**Firebase ID Token**
+- When user logs in (via Google, email etc) Firebase returns the ID Token back.
+- Proves to the backend that the user has successfully authenticated.
+- 1 hour life cycle.
+- Used to switch out for the Custom JWT.
+
