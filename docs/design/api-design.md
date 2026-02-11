@@ -350,3 +350,20 @@ All error responses follow this structure:
 | `field` | string | No | Specific field that caused the error (for validation errors) |
 | `timestamp` | string | Yes | ISO 8601 timestamp when the error occurred |
 
+### HTTP Status Codes
+Uses the standard HTTP status codes:
+
+| Code | Meaning | Usage |
+|------|---------|-------|
+| **200** | OK | Successful GET, PATCH, PUT requests |
+| **201** | Created | Successful POST that creates a resource |
+| **204** | No Content | Successful DELETE or action with no response body |
+| **400** | Bad Request | Invalid request format, validation errors |
+| **401** | Unauthorized | Missing or invalid authentication token |
+| **403** | Forbidden | Valid authentication but insufficient permissions |
+| **404** | Not Found | Resource doesn't exist |
+| **409** | Conflict | Request conflicts with current state (e.g., duplicate) |
+| **422** | Unprocessable Entity | Valid format but semantically incorrect |
+| **429** | Too Many Requests | Rate limit exceeded |
+| **500** | Internal Server Error | Unexpected server error |
+| **503** | Service Unavailable | Temporary service outage or maintenance |
