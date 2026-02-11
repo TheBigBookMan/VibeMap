@@ -853,3 +853,20 @@ Strict limits to prevent brute force attacks and credential stuffing.
   }
 }
 ```
+
+#### Read Endpoints (GET)
+
+Generous limits for browsing and discovery.
+
+| Endpoint | Free User | Premium User | Window |
+|----------|-----------|--------------|--------|
+| `GET /plans` | 100 requests | 200 requests | 15 minutes |
+| `GET /plans/:id` | 60 requests | 120 requests | 15 minutes |
+| `GET /plans/:id/messages` | 30 requests | 60 requests | 15 minutes |
+| `GET /users/me` | 30 requests | 60 requests | 15 minutes |
+| `GET /users/me/notifications` | 30 requests | 60 requests | 15 minutes |
+
+**Rationale:**
+- Read operations are less expensive than writes
+- Higher limits encourage browsing and engagement
+- Premium users get double the limits for better UX
