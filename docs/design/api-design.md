@@ -589,6 +589,7 @@ This project uses cursor-based pagination for feed-style endpoints. Simpler navi
 ### Cursor-Based Pagination
 Cursor-based pagination uses opaque token to mark the user's position in the result set. This is used for fast changing data set results.
 
+#### Why Cursor-Based Pagination
 **Advantages**
 - Consistent results: No duplicates or skipped items when new data sets queried
 - Performance: Scales well with large datasets
@@ -604,3 +605,21 @@ Cursor-based pagination uses opaque token to mark the user's position in the res
 - Chat messages
 - Notifications
 - User's plan
+
+#### Request Format
+**Query Parameters**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `limit` | integer | No | 20 | Number of items to return (1-100) |
+| `cursor` | string | No | null | Opaque cursor token from previous response |
+
+**Examples**
+```http
+# First page- no cursor
+GET /plans?limit=20
+
+# Second page- cursor from previous response
+GET /plans?limit=20&cursor=eyKASDNJn123
+```
+
+## 
