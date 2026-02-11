@@ -204,3 +204,26 @@ Different endpoints require different authorization levels:
 | **Premium Only** | JWT + `tier: 'premium'` | `POST /plans` (with `accessLevel: 'premium'`) |
 | **Moderator** | JWT + `role: 'moderator'` | `GET /reports`, `PATCH /reports/:id` |
 | **Admin** | JWT + `role: 'admin'` | `PATCH /users/:id/ban`, `GET /admin/*` |
+
+### Security Considerations
+**Token Storage (Client)**
+- Store access token (Custom JWT) in memory (Zustand)
+- Store refresh token in HttpOnly cookie
+- Never store tokens in plain localStorage due to risk of XSS vulnerability
+
+**Token Rotation**
+- Refresh tokens are single-use and each refresh returns a new refresh token
+- Old refresh tokens are invalidated immediately after use
+- Prevents token replay attacks
+
+**Rate Limiting**
+- Login attempts: 5 per IP per 15 minutes
+- Refresh token: 10 per user per hour
+- Registration: 3 per IP per hour
+
+**Password Requirements**
+- Minimum 8 characters
+- At least one uppercase
+- At least one lowercase
+- At least one number
+- Hashed with Argon2
