@@ -168,3 +168,25 @@ All authentication requests must include the JWT in the `Authorization` header.
 GET /plans Authorization: Bearer eyASDLJNASDNJKD
 ```
 
+### Token Payload
+The JWT contains the following payload claims:
+
+```json
+{
+  "sub": "usr_123",
+  "email": "test@email.com",
+  "role": "user",
+  "tier": "premium",
+  "emailVerified": true,
+  "iat": 17092323,
+  "exp": 17092343
+}
+```
+
+- `sub`: User ref (subject)
+- `email`: Users email address
+- `role`: Role of the user "user | moderator | admin"
+- `tier`: Subscription level "free | premium"
+- `emailVerified`: If email has been verified
+- `iat`: Issued at (Unix timestamp)
+- `exp`: Expiration (Unix timestamp)
