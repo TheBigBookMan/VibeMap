@@ -810,6 +810,8 @@ This project implements per-user, per-endpoint rate limiting to prevent abuse, e
 `rate-limiter-flexible` library with Redis storage.
 
 ### Rate Limit Tiers
+Different user tiers have different rate limits:
+
 | Tier | Multiplier | Description |
 |------|------------|-------------|
 | **Visitor** (unauthenticated) | 0.5x | Reduced limits for browsing only |
@@ -818,3 +820,36 @@ This project implements per-user, per-endpoint rate limiting to prevent abuse, e
 | **Moderator** | 5x | Higher limits for moderation tasks |
 | **Admin** | Unlimited | No rate limits |
 
+### Rate Limit Strategy for Endpoint Category
+#### Authentication Endpoints
+
+Strict limits to prevent brute force attacks and credential stuffing.
+
+| Endpoint | Limit | Window | Tier Applied |
+|----------|-------|--------|--------------|
+| `POST /auth/register` | 3 requests | 1 hour | Per IP |
+| `POST /auth/login` | 5 requests | 15 minutes | Per IP |
+| `POST /auth/refresh` | 10 requests | 1 hour | Per user |
+| `POST /auth/forgot-password` | 3 requests | 1 hour | Per IP |
+| `POST /auth/reset-password` | 5 requests | 1 hour | Per token |
+
+**Rationale:**
+- Login attempts limited to prevent brute force
+- Registration limited per IP to prevent bot signups
+- Refresh token limited per user to detect token theft
+
+**Example Response (429):**
+```json
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Too many login attempts",
+    "details": "You have exceeded the maximum number of login attempts. Please try again in 12 minutes.",
+    "retryAfter": 720,
+    "limit": 5,
+    "remaining": 0,
+    "resetAt": "2024-02-11T15:00:00Z",
+    "timestamp": "2024-02-11T14:48:00Z"
+  }
+}
+```
