@@ -296,3 +296,17 @@ Action | Requires Verification |
 | Join plan | Yes                   |
 | Send chat message | Yes                   |
 | File report | Yes                   |
+
+### Special Cases
+**Moderator Overrides**
+- View `shadow_hidden` and `pending_review` plans
+- View deleted content (soft-deleted messages, plans)
+- Access moderation decisions for any content
+- View full user profiles including blocked content
+
+**Admin Overrides**
+Have all moderator capabilities plus:
+- Ban/unban users
+- Modify feature flags
+- View audit logs
+- Delete users
