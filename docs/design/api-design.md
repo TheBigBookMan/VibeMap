@@ -504,3 +504,36 @@ X-RateLimit-Remaining: 0
 X-RateLimit-Reset: 1707662442
 Retry-After: 42
 ```
+
+#### Business Logic Errors (422)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `PLAN_STARTED` | 422 | Plan has already started | Cannot join/modify past plans |
+| `PLAN_ENDED` | 422 | Plan has already ended | Cannot modify ended plans |
+| `PLAN_CANCELLED` | 422 | Plan has been cancelled | Attempting to interact with cancelled plan |
+| `CHAT_WINDOW_CLOSED` | 422 | Chat window is not currently open | Outside of 24/48h window |
+| `NOT_PARTICIPANT` | 422 | You are not a participant in this plan | Must join plan to access chat |
+| `INSUFFICIENT_BALANCE` | 422 | Insufficient account balance | Payment-related errors (future) |
+
+**Examples**
+```json
+// 422 - Plan started
+{
+  "error": {
+    "code": "PLAN_STARTED",
+    "message": "Plan has already started",
+    "details": "You cannot join plans that have already begun. Browse upcoming plans instead.",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+
+// 422 - Chat window closed
+{
+  "error": {
+    "code": "CHAT_WINDOW_CLOSED",
+    "message": "Chat window is not currently open",
+    "details": "Chat opens 24 hours before the plan starts and closes 24 hours after it ends. This plan's chat is currently closed.",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
