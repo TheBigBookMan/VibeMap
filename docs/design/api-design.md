@@ -323,3 +323,30 @@ X-User-Tier: premium
 X-User-Role: user
 X-Email-Verified: true
 ```
+
+## Error Responses
+Use a consistent error response format across all endpoints. All endpoints return appropriate error codes and readable messages.
+
+### Error Response Format
+All error responses follow this structure:
+
+```json
+{
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human readable error message",
+    "details": "Additional context for guidance- optional",
+    "field": "fieldName (optional, for validation errors mostly)",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `code` | string | Yes | Machine-readable error code (UPPER_SNAKE_CASE) |
+| `message` | string | Yes | Human-readable error description |
+| `details` | string | No | Additional context, troubleshooting tips, or next steps |
+| `field` | string | No | Specific field that caused the error (for validation errors) |
+| `timestamp` | string | Yes | ISO 8601 timestamp when the error occurred |
+
