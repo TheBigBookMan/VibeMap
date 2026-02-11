@@ -78,3 +78,32 @@ POST /subscriptions/portal # Get customer portal URL
 - These are **RPC-style** operations that don't map cleanly to resource updates as RPC is more action focused, rather than entity oriented
 - Using `POST` makes it clear these are actions, not just data updates
 - Action names use verbs (join, leave, block) since they're operations, not resources
+
+### Query Parameters
+Use query parameters for filtering, sorting and pagination:
+
+**Filtering**
+```http
+GET /plans?interests=bouldering,coffee # Names of activities
+GET /plans?distance=5&lat=34.05&lng=-118.24 # Location based filtering
+GET /plans?startTimeAfter=2024-02-15T00:00:00z # Time based filtering
+GET /plans?status=visible # Visibility based filtering
+```
+
+**Sorting**
+```http
+GET /plans?sort=startTime # Default ascending
+GET /plans?sort=-startTime # Descending using minus prefix
+GET /plans?sort=distance,startTime # Multiple fields
+```
+
+**Pagination**
+```http
+GET /plans?limit=20&cursor=djnASdNJJN # Cursor-based (preference for feeds)
+GET /reports?limit=50&offset=100 # Offset based
+```
+
+**Search**
+```http
+GET /plans?q=coffee # Free text search in title/description
+```
