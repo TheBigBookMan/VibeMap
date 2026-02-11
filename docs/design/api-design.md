@@ -245,4 +245,13 @@ Users are assigned a role which has rules associated with them
 Higher roles inherit all permissions from lower roles.
 `admin` > `moderator` > `user`
 
+### Resource Ownership
+Users can only modify resources that they own (created).
 
+**Ownership Rules**
+| Resource | Owner | Permissions |
+|----------|-------|-------------|
+| **Plan** | `creator_ref` | Update plan details, cancel plan, manage participants (kick) |
+| **Chat Message** | `user_ref` | Edit message (within 15 min), delete own message |
+| **User Profile** | Self | Update profile, upload avatar, manage interests |
+| **Report** | `reporter_ref` | View own reports, cancel pending report |
