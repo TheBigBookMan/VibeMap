@@ -404,3 +404,42 @@ Uses the standard HTTP status codes:
   }
 }
 ```
+
+#### Validation Errors (400, 422)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `VALIDATION_ERROR` | 400 | Request validation failed | One or more fields failed validation |
+| `INVALID_INPUT` | 400 | Invalid input format | Malformed JSON, wrong data type |
+| `MISSING_FIELD` | 400 | Required field missing | Required field not provided |
+| `INVALID_FIELD` | 422 | Invalid field value | Field value doesn't meet constraints |
+| `INVALID_DATE_RANGE` | 422 | Invalid date range | Start time after end time, or past dates |
+| `PLAN_FULL` | 422 | Plan has reached maximum capacity | Cannot join - plan is full |
+| `ALREADY_JOINED` | 422 | You have already joined this plan | User is already a participant |
+
+**Examples**
+```json
+// 400 - Validation error (multiple fields)
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "Request validation failed",
+    "details": "Multiple validation errors occurred",
+    "fields": {
+      "title": "Title must be between 5 and 100 characters",
+      "maxParticipants": "Must be between 2 and 50",
+      "startTime": "Start time must be in the future"
+    },
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+
+// 422 - Already joined
+{
+  "error": {
+    "code": "ALREADY_JOINED",
+    "message": "You have already joined this plan",
+    "details": "You are already a participant in this plan. View it in your upcoming plans.",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
