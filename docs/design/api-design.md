@@ -477,3 +477,30 @@ Uses the standard HTTP status codes:
   }
 }
 ```
+
+#### Rate Limiting Errors (429)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `RATE_LIMIT_EXCEEDED` | 429 | Rate limit exceeded | Too many requests in time window |
+
+**Example:**
+```json
+{
+  "error": {
+    "code": "RATE_LIMIT_EXCEEDED",
+    "message": "Rate limit exceeded",
+    "details": "You have exceeded the rate limit. Please try again in 42 seconds.",
+    "retryAfter": 42,
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
+
+**Rate Limit Headers:**
+```http
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1707662442
+Retry-After: 42
+```
