@@ -797,3 +797,6 @@ All API endpoints follow this pattern:
 | **Header** (`API-Version: 1`) | Clean URLs | Not cacheable, harder to test |
 | **Query Param** (`/plans?v=1`) | Flexible | Easily forgotten, breaks caching |
 | **Content Negotiation** (`Accept: application/vnd.vibemeet.v1+json`) | RESTful | X Complex, poor tooling support |
+
+### Version Lifecycle
+Currently in version 1.
