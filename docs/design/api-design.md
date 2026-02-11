@@ -635,11 +635,11 @@ GET /plans?limit=20&cursor=eyKASDNJn123
 }
 ```
 
-- data: Array of items
-- pagination:
-  - cursor: Cursor for next page (null if no more data)
-  - hasMore: Boolean indicating if more data exists
-  - limit: Limit used for this request
+- `data`: Array of items
+- `pagination`:
+  - `cursor`: Cursor for next page (null if no more data)
+  - `hasMore`: Boolean indicating if more data exists
+  - `limit`: Limit used for this request
 
 **Example**
 ```json
@@ -668,3 +668,22 @@ GET /plans?limit=20&cursor=eyKASDNJn123
 }
 ```
 
+#### Format
+Cursors are base64 encoded JSON objects containing the position markers.
+```json
+{
+  "id": "pln_zadsd",
+  "createdAt": "2024-12-11T00:00:00Z",
+  "filters": {
+    "tags": ["coffee"],
+    "distance": 5
+  }
+}
+```
+
+- `id`: Last item's id
+- `createdAt`: Last item's sort field
+- `filters`: Encoded filters to maintain context
+
+Encoded cursor (what the client sees) which is then parsed.
+"eyJASDNjnASdljnasd...."
