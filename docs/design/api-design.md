@@ -130,7 +130,17 @@ Different tokens are used for specific purposes, ensuring higher level of securi
 
 **Firebase ID Token**
 - When user logs in (via Google, email etc) Firebase returns the ID Token back.
+- Client sends to /auth/login with the firebase ID.
 - Proves to the backend that the user has successfully authenticated.
 - 1 hour life cycle.
 - Used to switch out for the Custom JWT.
+
+**Custom JWT**
+- Acts as the access token, sent in `Authorization: Bearer <token>` header on every request.
+- Returned by the backend once /auth/login has been hit.
+- Used for validation on backend requests.
+- Expires after 15 minutes for high security resets.
+- Once expired, API returns `401 Unauthorized`.
+- Stored in memory, rather than localstorage/cookies to ensure no XSS (Cross-site scripting) attacks.
+- Refreshed by the /refresh endpoint via the Refresh Token.
 
