@@ -160,3 +160,11 @@ Different tokens are used for specific purposes, ensuring higher level of securi
 - When 15 minute window for Custom JWT has expired, Refresh Token is sent to /refresh to retrieve a fresh Custom JWT.
 - Stored as HttpOnly Cookie as critical security as this stops any scripts running and reading the cookie.
 - 7 day life as it doesn't keep a user logged in for longer than a week.
+
+### Bearer Tokens
+All authentication requests must include the JWT in the `Authorization` header.
+
+```http 
+GET /plans Authorization: Bearer eyASDLJNASDNJKD
+```
+
