@@ -725,3 +725,49 @@ GET /admin/reports?limit=50&offset=100
 }
 ```
 
+### Pagination Error Responses
+
+#### Invalid Cursor
+```http
+GET /plans?cursor=invalid_base64
+
+Response: 400 Bad Request
+{
+  "error": {
+    "code": "INVALID_CURSOR",
+    "message": "Invalid pagination cursor",
+    "details": "The provided cursor is malformed or expired. Please start from the first page.",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
+
+#### Invalid Limit
+```http
+GET /plans?limit=500
+
+Response: 400 Bad Request
+{
+  "error": {
+    "code": "INVALID_LIMIT",
+    "message": "Invalid limit value",
+    "details": "Limit must be between 1 and 100",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
+
+#### Invalid Offset
+```http
+GET /admin/reports?offset=-10
+
+Response: 400 Bad Request
+{
+  "error": {
+    "code": "INVALID_OFFSET",
+    "message": "Invalid offset value",
+    "details": "Offset must be a non-negative integer",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
