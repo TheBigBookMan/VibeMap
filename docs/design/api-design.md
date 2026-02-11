@@ -687,3 +687,41 @@ Cursors are base64 encoded JSON objects containing the position markers.
 
 Encoded cursor (what the client sees) which is then parsed.
 "eyJASDNjnASdljnasd...."
+
+### Offset-Based Pagination
+When page jumping is useful, use offset-based pagination.
+
+**Query Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `limit` | integer | No | 50 | Number of items per page (1-100) |
+| `offset` | integer | No | 0 | Number of items to skip |
+
+**Request Example:**
+```http
+# First page
+GET /admin/reports?limit=50&offset=0
+
+# Second page
+GET /admin/reports?limit=50&offset=50
+
+# Third page
+GET /admin/reports?limit=50&offset=100
+```
+
+**Response Format:**
+```json
+{
+  "data": [...],
+  "pagination": {
+    "limit": 50,
+    "offset": 0,
+    "total": 342,        // Total count (expensive to compute)
+    "totalPages": 7,     // Math.ceil(total / limit)
+    "currentPage": 1,    // Math.floor(offset / limit) + 1
+    "hasMore": true
+  }
+}
+```
+
