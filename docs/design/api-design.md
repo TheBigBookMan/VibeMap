@@ -443,3 +443,37 @@ Uses the standard HTTP status codes:
   }
 }
 ```
+
+#### Resource Errors (404, 409)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `NOT_FOUND` | 404 | Resource not found | Requested resource doesn't exist |
+| `PLAN_NOT_FOUND` | 404 | Plan not found | Plan doesn't exist or was deleted |
+| `USER_NOT_FOUND` | 404 | User not found | User doesn't exist or was deleted |
+| `MESSAGE_NOT_FOUND` | 404 | Message not found | Chat message doesn't exist |
+| `DUPLICATE_RESOURCE` | 409 | Resource already exists | Attempting to create a duplicate |
+| `CONFLICT` | 409 | Request conflicts with current state | Generic conflict error |
+
+**Examples**
+```json
+// 404 - Plan not found
+{
+  "error": {
+    "code": "PLAN_NOT_FOUND",
+    "message": "Plan not found",
+    "details": "The requested plan does not exist or has been deleted",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+
+// 409 - Duplicate resource
+{
+  "error": {
+    "code": "DUPLICATE_RESOURCE",
+    "message": "Resource already exists",
+    "details": "A user with this email address already exists",
+    "field": "email",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
