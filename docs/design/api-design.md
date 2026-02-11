@@ -571,3 +571,14 @@ Retry-After: 42
 ```
 
 **Note:** Server errors (5xx) should include a `requestId` for debugging and support purposes.
+
+### Monitoring & Alerting
+**Error Metrics to Track:**
+
+| Metric | Purpose | Alert Threshold |
+|--------|---------|----------------|
+| Error rate (%) | Overall API health | > 5% |
+| 5xx errors/min | Server-side issues | > 10 |
+| 4xx errors/min | Client issues or API misuse | > 100 |
+| Error by code | Track specific issues | INTERNAL_ERROR > 5/min |
+| Error by endpoint | Identify problematic endpoints | Any endpoint > 10% error rate |
