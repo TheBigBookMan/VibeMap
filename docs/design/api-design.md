@@ -800,3 +800,21 @@ All API endpoints follow this pattern:
 
 ### Version Lifecycle
 Currently in version 1.
+
+---
+
+## Rate Limiting
+This project implements per-user, per-endpoint rate limiting to prevent abuse, ensure fair resource usage and maintain service stability. Rate limits are enforced using Redis-backed token bucket and sliding window algorithms.
+
+**Implementation**
+`rate-limiter-flexible` library with Redis storage.
+
+### Rate Limit Tiers
+| Tier | Multiplier | Description |
+|------|------------|-------------|
+| **Visitor** (unauthenticated) | 0.5x | Reduced limits for browsing only |
+| **Free User** | 1x | Standard limits |
+| **Premium User** | 2x | Double the standard limits |
+| **Moderator** | 5x | Higher limits for moderation tasks |
+| **Admin** | Unlimited | No rate limits |
+
