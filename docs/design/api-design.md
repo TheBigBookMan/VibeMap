@@ -118,7 +118,7 @@ sequenceDiagram
         actor API
         actor Firebase
         Client->>Firebase: Signin (email/password)
-        Firebase->>Client: Return Firebase UID Token + Refresh Token
+        Firebase->>Client: Return Firebase UID Token
         Client->>API: POST /auth/login "Authorisation: Bearer <id_token>"
         API->>Client: Custom JWT + Refresh Token
         Client->>API: API Requests "Authorization: Bearer <custom_jwt>"
@@ -144,3 +144,7 @@ Different tokens are used for specific purposes, ensuring higher level of securi
 - Stored in memory, rather than localstorage/cookies to ensure no XSS (Cross-site scripting) attacks.
 - Refreshed by the /refresh endpoint via the Refresh Token.
 
+**Refresh Token**
+- When 15 minute window for Custom JWT has expired, Refresh Token is sent to /refresh to retrieve a fresh Custom JWT.
+- Stored as HttpOnly Cookie as critical security as this stops any scripts running and reading the cookie.
+- 7 day life as it doesn't keep a user logged in for longer than a week.
