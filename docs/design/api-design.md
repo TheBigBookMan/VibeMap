@@ -125,6 +125,18 @@ sequenceDiagram
         API->>Client: Protected Resource
 ```
 
+**Auth Flow** (The "BFF" Pattern)
+1. The user logs in via Google/Email. Firebase returns an ID Token to the frontend.
+
+2. The frontend immediately sends that ID Token to the backend (/auth/login).
+
+3. The backend verifies the Firebase ID Token. If valid, the backend generates two things of its own:
+
+    - Custom JWT (Access Token): Sent in the JSON body (stored in JS Memory).
+    - Refresh Token: Sent in a Set-Cookie header with the HttpOnly and Secure flags.
+
+4. Cookies is holding the 7-day key, and JavaScript is holding the 15-minute key.
+
 ### Token Types
 Different tokens are used for specific purposes, ensuring higher level of security.
 
