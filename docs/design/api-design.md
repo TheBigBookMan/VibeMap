@@ -310,3 +310,16 @@ Have all moderator capabilities plus:
 - Modify feature flags
 - View audit logs
 - Delete users
+
+### Authorization Headers
+Authorization information can be inspected in responses and help clients understand the current user's capabilities without additional API calls.
+
+```http 
+GET /plans/:id
+Authorization: Bearer
+
+Response Headers:
+X-User-Tier: premium
+X-User-Role: user
+X-Email-Verified: true
+```
