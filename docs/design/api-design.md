@@ -241,3 +241,8 @@ Users are assigned a role which has rules associated with them
 | `moderator` | Content moderator | All user permissions + view/resolve reports, hide content, view moderation decisions |
 | `admin` | System administrator | All moderator permissions + ban users, manage feature flags, view audit logs |
 
+**Role Hierarchy**
+Higher roles inherit all permissions from lower roles.
+`admin` > `moderator` > `user`
+
+
