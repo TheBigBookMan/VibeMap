@@ -263,3 +263,25 @@ Certain features are gated by subscription tier.
 |------|--------------|
 | **Free** | Create 5 plans/month, join public + members plans, 24h chat window |
 | **Premium** | Unlimited plans, create + join premium plans, 48h chat window, priority ranking |
+
+### Relationship-Based Access
+Access is determined by the user's relationship to the resource or other users.
+
+**Access Level (Plans)**
+Plans have three levels that control visibility and participation:
+
+| Access Level | Who Can See | Who Can Join |
+|--------------|-------------|--------------|
+| `public` | Everyone (including visitors) | All authenticated users |
+| `members` | Authenticated users only | All authenticated users |
+| `premium` | Premium users only | Premium users only |
+
+**Participant Status (Chat Access)**
+Users must be a confirmed participant to access the plan chat.
+
+**Blocked User Requirements**
+- Users cannot interact with other users they have blocked
+- Users cannot interact with other users who have blocked them
+- Users cannot view or join plans created by users who have blocked them
+- Users cannot view or join plans created by users who they have blocked
+- Users cannot share friend requests
