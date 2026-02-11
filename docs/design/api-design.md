@@ -190,3 +190,17 @@ The JWT contains the following payload claims:
 - `emailVerified`: If email has been verified
 - `iat`: Issued at (Unix timestamp)
 - `exp`: Expiration (Unix timestamp)
+
+### Authorization Levels
+
+Different endpoints require different authorization levels:
+
+| Level | Description | Example Endpoints |
+|-------|-------------|-------------------|
+| **Public** | No authentication required | `GET /plans` (browse), `GET /plans/:id` (view) |
+| **Authenticated** | Valid JWT required | `POST /plans` (create), `POST /plans/:id/join` |
+| **Email Verified** | JWT + `emailVerified: true` | `POST /plans/:id/messages` (chat) |
+| **Host Only** | JWT + user is plan host | `PATCH /plans/:id`, `DELETE /plans/:id` |
+| **Premium Only** | JWT + `tier: 'premium'` | `POST /plans` (with `accessLevel: 'premium'`) |
+| **Moderator** | JWT + `role: 'moderator'` | `GET /reports`, `PATCH /reports/:id` |
+| **Admin** | JWT + `role: 'admin'` | `PATCH /users/:id/ban`, `GET /admin/*` |
