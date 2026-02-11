@@ -96,6 +96,11 @@ erDiagram
         boolean is_cover
         datetime created_at
     }
+    
+    plan_interest {
+        string plan_ref PK
+        string interest_ref PK
+    }
 
     chat_message {
         string ref PK
@@ -187,10 +192,12 @@ erDiagram
     plan ||--o{ plan_attendee : "has"
     plan ||--o{ plan_invitation : "for"
     plan ||--o{ plan_image : "has"
+    plan ||--o{ plan_interest : "has"
     plan ||--o{ chat_message : "contains"
     plan ||--|| category : "belongs_to"
 
     interest ||--o{ user_interest : "tagged_to"
+    interest ||--o{ plan_interest : "tagged_to"
 ```
 
 ## Tables
@@ -503,7 +510,7 @@ CREATE UNIQUE INDEX category_pk ON category(ref);
 Table will be very small with less than 20 categories, no indexing needed.
 
 ### interest
-Table for interests which a user can say they have, to help with suggesting categories or finding friends with similar interests.
+Table for interests which a user can say they have, to help with suggesting categories or finding friends with similar interests. Acting like a tag.
 
 **Columns**
 - `ref` (PK): UUID primary key
@@ -518,6 +525,26 @@ CREATE UNIQUE INDEX interest_pk ON interest(ref);
 
 **Rationale**
 Will have less than 40 items in the interest table so don't need to index.
+
+### plan_interest
+Joining table for the M:M relationship between `plan` and `interest` as a plan can have many interests.
+
+**Columns**
+- `plan_ref` (PK) (FK): Composite key relating to the `plan` table
+- `interest_ref` (PK) (FK): Composite key relating to the `interest` table
+
+**Indexes**
+```sql
+-- Primary key composite (auto-created)
+CREATE UNIQUE INDEX plan_interest_unique_pk ON plan_interest(plan_ref, interest_ref)
+;
+-- Plans that have an interest tag
+CREATE INDEX idx_interest_plans ON plan_interest(interest_ref, plan_ref);
+```
+
+**Rationale**
+- `plan_interest_unique_pk` primary key composite unique index: To find the interests that a particular plan has.
+- `idx_interest_plans` index: A plan can only have one version of the interest.
 
 ### user_interest
 Joining table for the M:M relationship between `user` and `interest` as a user can have many interests.
