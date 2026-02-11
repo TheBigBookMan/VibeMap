@@ -367,3 +367,40 @@ Uses the standard HTTP status codes:
 | **429** | Too Many Requests | Rate limit exceeded |
 | **500** | Internal Server Error | Unexpected server error |
 | **503** | Service Unavailable | Temporary service outage or maintenance |
+
+#### Authentication & Authorization Errors (401, 403)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `UNAUTHORIZED` | 401 | Authentication required | No token provided |
+| `INVALID_TOKEN` | 401 | Invalid authentication token | Token signature verification failed |
+| `TOKEN_EXPIRED` | 401 | Access token has expired | JWT exp claim is in the past |
+| `EMAIL_NOT_VERIFIED` | 403 | Email verification required | User hasn't verified their email |
+| `FORBIDDEN` | 403 | Insufficient permissions | Generic permission denial |
+| `NOT_PLAN_HOST` | 403 | Only the plan host can perform this action | User doesn't own the plan |
+| `PREMIUM_REQUIRED` | 403 | Premium subscription required | Feature requires Premium tier |
+| `QUOTA_EXCEEDED` | 403 | Plan creation limit reached | Free user exceeded monthly plan quota |
+| `BLOCKED` | 403 | Cannot interact with this user | Blocked or blocked by the other user |
+| `USER_BANNED` | 403 | Your account has been suspended | User's account is banned |
+
+**Examples**
+```json
+// 401 - No token provided
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Authentication required",
+    "details": "Include a valid access token in the Authorization header",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+
+// 403 - Premium required
+{
+  "error": {
+    "code": "PREMIUM_REQUIRED",
+    "message": "Premium subscription required",
+    "details": "Creating premium-access plans requires an active Premium subscription. Upgrade at /settings/subscription",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
