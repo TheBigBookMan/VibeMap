@@ -895,7 +895,6 @@ Stricter limits to prevent spam and abuse.
 - Reduces abuse of report system
 
 #### Admin/Moderation Endpoints
-
 Higher limits for operational needs.
 
 | Endpoint | Moderator | Admin | Window |
@@ -909,3 +908,18 @@ Higher limits for operational needs.
 **Rationale:**
 - Moderators need higher limits during active moderation sessions
 - Admins have unlimited access for critical operations
+
+#### WebSocket (Socket.IO) Rate Limits
+Real-time chat has separate rate limits.
+
+| Event | Limit | Window | Notes |
+|-------|-------|--------|-------|
+| `message:send` | 100 messages | 1 hour | Per user per plan |
+| `message:edit` | 20 edits | 1 hour | Per user |
+| `typing:start` | 60 events | 1 minute | Per user per plan |
+| `room:join` | 10 joins | 1 minute | Per user (prevents spam) |
+
+**Rationale:**
+- Prevents chat flooding
+- Limits typing indicator spam
+- Prevents rapid room join/leave abuse
