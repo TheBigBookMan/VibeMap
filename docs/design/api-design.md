@@ -582,3 +582,25 @@ Retry-After: 42
 | 4xx errors/min | Client issues or API misuse | > 100 |
 | Error by code | Track specific issues | INTERNAL_ERROR > 5/min |
 | Error by endpoint | Identify problematic endpoints | Any endpoint > 10% error rate |
+
+## Pagination
+This project uses cursor-based pagination for feed-style endpoints. Simpler navigation uses offset-based pagination.
+
+### Cursor-Based Pagination
+Cursor-based pagination uses opaque token to mark the user's position in the result set. This is used for fast changing data set results.
+
+**Advantages**
+- Consistent results: No duplicates or skipped items when new data sets queried
+- Performance: Scales well with large datasets
+- Real-time friendly: Works reliably with frequently updated feeds
+
+**Trade-Offs**
+- Cannot jump to arbitrary pages
+- Cannot calculate total page count
+- More complexity
+
+**Use Cases**
+- Plans feed
+- Chat messages
+- Notifications
+- User's plan
