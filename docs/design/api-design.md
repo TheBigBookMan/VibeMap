@@ -923,3 +923,22 @@ Real-time chat has separate rate limits.
 - Prevents chat flooding
 - Limits typing indicator spam
 - Prevents rapid room join/leave abuse
+
+### Rate Limit Headers
+All responses include rate limit information in headers:
+```http
+HTTP/1.1 200 OK
+X-RateLimit-Limit: 100           # Total requests allowed in window
+X-RateLimit-Remaining: 87        # Requests remaining
+X-RateLimit-Reset: 1707662400    # Unix timestamp when limit resets
+X-RateLimit-Window: 900          # Window duration in seconds (15 min)
+```
+
+**When limit is exceeded:**
+```http
+HTTP/1.1 429 Too Many Requests
+X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 0
+X-RateLimit-Reset: 1707662400
+Retry-After: 720                 # Seconds until retry allowed
+```
