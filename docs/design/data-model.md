@@ -213,7 +213,7 @@ Primary table for user accounts, this is linked to the Firebase Auth.
 - `first_name`: The users first name
 - `last_name`: The users last name
 - `email_verified`: Checking if the user has verified, will be used to show others if verified- may limit access to certain things
-- `role`: Differentiate between the different authorisation- "user | admin"
+- `role`: Differentiate between the different authorisation- "user | moderator | admin"
 - `last_login`: Shows the last login time, will be used for determining account expiration (unsure)
 - `updated_at`: Audit trail for last updates
 - `deleted_at`: Audit trail for deleted account- soft delete

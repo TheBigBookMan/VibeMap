@@ -119,7 +119,7 @@ sequenceDiagram
         actor Firebase
         Client->>Firebase: Signin (email/password)
         Firebase->>Client: Return Firebase UID Token
-        Client->>API: POST /auth/login "Authorisation: Bearer <id_token>"
+        Client->>API: POST /auth/login "Authorization: Bearer <id_token>"
         API->>Client: Custom JWT + Refresh Token
         Client->>API: API Requests "Authorization: Bearer <custom_jwt>"
         API->>Client: Protected Resource
@@ -227,3 +227,5 @@ Different endpoints require different authorization levels:
 - At least one lowercase
 - At least one number
 - Hashed with Argon2
+
+## Authorization
