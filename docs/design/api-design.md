@@ -255,3 +255,11 @@ Users can only modify resources that they own (created).
 | **Chat Message** | `user_ref` | Edit message (within 15 min), delete own message |
 | **User Profile** | Self | Update profile, upload avatar, manage interests |
 | **Report** | `reporter_ref` | View own reports, cancel pending report |
+
+### Tier-Based Access (Subscriptions)
+Certain features are gated by subscription tier.
+
+| Tier | Restrictions |
+|------|--------------|
+| **Free** | Create 5 plans/month, join public + members plans, 24h chat window |
+| **Premium** | Unlimited plans, create + join premium plans, 48h chat window, priority ranking |
