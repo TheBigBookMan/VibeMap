@@ -33,7 +33,7 @@ Use the standard HTTP verbs for indicating the action being made:
 - Use `PATCH` for partial updates
 - Use `PUT` only when replacing the entire resource
 - `POST` to collections creates new items
-- `POST` to a specific resource performs actions
+- `POST` to a specific resource performs actions (see Custom Actions below)
 
 ### URL Structure
 **Pattern:** `/{resourece}/{id}/{sub-resource}/{id}`
@@ -55,3 +55,26 @@ DELETE /plans/:id/attendees/:userId # Remove an attendee
 GET /users/:id/notifications # Get all notifications for user
 PATCH /users/:id/notifications/:notificationId/read # Mark notification as read
 ```
+
+### Custom Actions
+Actions that don't fit the regular CRUD operations. Use `POST` to a descriptive endpoint:
+**Pattern** `POST /{resource}/{id}/{action}`
+
+**Examples**
+```http
+# Plan actions
+POST /plans/:id/join # Join a plan
+POST /plans/:id/check-in # QR code check in
+
+# User actions
+POST /users/:id/block # Block a user
+POST /users/:id/follow # Follow a user
+
+# Subscriptions
+POST /subscriptions/portal # Get customer portal URL
+```
+
+**Rationale:**
+- These are **RPC-style** operations that don't map cleanly to resource updates as RPC is more action focused, rather than entity oriented
+- Using `POST` makes it clear these are actions, not just data updates
+- Action names use verbs (join, leave, block) since they're operations, not resources
