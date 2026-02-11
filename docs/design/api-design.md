@@ -622,4 +622,49 @@ GET /plans?limit=20
 GET /plans?limit=20&cursor=eyKASDNJn123
 ```
 
-## 
+#### Response Format
+**Response Structure**
+```json
+{
+  "data": [...],
+  "pagination": {
+    "cursor": "ey...",
+    "hashMore": true,
+    "limit": 20
+  }
+}
+```
+
+- data: Array of items
+- pagination:
+  - cursor: Cursor for next page (null if no more data)
+  - hasMore: Boolean indicating if more data exists
+  - limit: Limit used for this request
+
+**Example**
+```json
+{
+  "data": [
+  {
+    "ref": "pln_abc123",
+    "title": "Pool at Joe's Bar",
+    "startTime": "2024-02-15T19:00:00Z",
+    "location": {
+      "text": "Joe's Bar, Adelaide",
+      "coords": { "lat": -34.92, "lng": 138.60 }
+    },
+    "participantCount": 4,
+    "maxParticipants": 8,
+    "tags": ["pool", "social"],
+    "accessLevel": "public"
+  },
+  // ... 19 more items
+],
+  "pagination": {
+    "cursor": "eyJpZCI6InBsbl94eXo3ODkiLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTExVDAwOjAwOjAwWiJ9",
+    "hasMore": true,
+    "limit": 20
+  }
+}
+```
+
