@@ -268,7 +268,7 @@ Table that holds the information related to the users subscription with Stripe.
 - `user_ref` (FK): UID foreign key for relationship with a `user`
 - `stripe_subscription_id`: Unique identifier for the users stripe subscription
 - `stripe_customer_id`: Unique identifier for the users stripe id
-- `plan_type`: Which subscription plan the user is on "free | premium | enterprise"
+- `plan_type`: Which subscription plan the user is on "free | premium "
 - `status`: The status of their subscription "active | canceled | past_due | unpaid"
 - `current_period_start`: Starting date of the current subscription plan
 - `current_period_end`: End date of the current subscription plan
