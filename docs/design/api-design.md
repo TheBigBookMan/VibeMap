@@ -285,3 +285,14 @@ Users must be a confirmed participant to access the plan chat.
 - Users cannot view or join plans created by users who have blocked them
 - Users cannot view or join plans created by users who they have blocked
 - Users cannot share friend requests
+
+### Email Verification
+Certain actions require a verified email address.
+
+Action | Requires Verification |
+|--------|-----------------------|
+| Browse plans | No                    |
+| Create plan | Yes                   |
+| Join plan | Yes                   |
+| Send chat message | Yes                   |
+| File report | Yes                   |
