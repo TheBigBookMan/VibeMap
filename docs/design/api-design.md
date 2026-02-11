@@ -107,3 +107,20 @@ GET /reports?limit=50&offset=100 # Offset based
 ```http
 GET /plans?q=coffee # Free text search in title/description
 ```
+
+## Authentication
+Using **JSON Web Token (JWT) bearer tokens** to handle API authentication.
+
+### Authentication Flow
+```mermaid
+sequenceDiagram
+        actor Client
+        actor API
+        actor Firebase
+        Client->>Firebase: Signin (email/password)
+        Firebase->>Client: Return Firebase UID Token + Refresh Token
+        Client->>API: POST /auth/login "Authorisation: Bearer <id_token>"
+        API->>Client: Custom JWT + Refresh Token
+        Client->>API: API Requests "Authorization: Bearer <custom_jwt>"
+        API->>Client: Protected Resource
+```
