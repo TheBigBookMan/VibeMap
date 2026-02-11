@@ -537,3 +537,37 @@ Retry-After: 42
   }
 }
 ```
+
+#### Server Errors (500, 503)
+| Code | Status | Message | When It Occurs |
+|------|--------|---------|----------------|
+| `INTERNAL_ERROR` | 500 | An unexpected error occurred | Unhandled exception |
+| `DATABASE_ERROR` | 500 | Database operation failed | Database connection or query error |
+| `EXTERNAL_SERVICE_ERROR` | 500 | External service unavailable | Stripe, AWS, Firebase failure |
+| `SERVICE_UNAVAILABLE` | 503 | Service temporarily unavailable | Maintenance mode or overload |
+
+**Examples**
+```json
+// 500 - Internal error
+{
+  "error": {
+    "code": "INTERNAL_ERROR",
+    "message": "An unexpected error occurred",
+    "details": "Our team has been notified. Please try again later.",
+    "requestId": "req_abc123xyz",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+
+// 503 - Service unavailable
+{
+  "error": {
+    "code": "SERVICE_UNAVAILABLE",
+    "message": "Service temporarily unavailable",
+    "details": "VibeMeet is currently undergoing scheduled maintenance. We'll be back shortly.",
+    "timestamp": "2024-02-11T14:30:00Z"
+  }
+}
+```
+
+**Note:** Server errors (5xx) should include a `requestId` for debugging and support purposes.
