@@ -893,3 +893,19 @@ Stricter limits to prevent spam and abuse.
 - Prevents spam plan creation
 - Limits chat message flooding
 - Reduces abuse of report system
+
+#### Admin/Moderation Endpoints
+
+Higher limits for operational needs.
+
+| Endpoint | Moderator | Admin | Window |
+|----------|-----------|-------|--------|
+| `GET /admin/reports` | 100 requests | Unlimited | 15 minutes |
+| `PATCH /admin/reports/:id` | 60 requests | Unlimited | 15 minutes |
+| `GET /admin/users/:id` | 60 requests | Unlimited | 15 minutes |
+| `PATCH /admin/users/:id/ban` | 30 requests | Unlimited | 15 minutes |
+| `GET /admin/feature-flags` | 30 requests | Unlimited | 15 minutes |
+
+**Rationale:**
+- Moderators need higher limits during active moderation sessions
+- Admins have unlimited access for critical operations
