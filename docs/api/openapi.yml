@@ -7,3 +7,11 @@ info:
     **VibeMeet** is a location-first platform for creating and joining small, casual in-person meetups — called **"plans"** — like "Pool at 7pm", "Bouldering tonight", or "Coffee and boardgames Saturday". Unlike formal event platforms (Eventbrite, Meetup), VibeMeet is designed around spontaneity and small groups. Think of it as the answer to "I want to do something tonight but don't want to scroll through 50-person networking mixers."
   
     Users discover plans through a scrollable feed or an interactive map, join with a single tap, and immediately enter a real-time group chat to coordinate details. A subscription model (Free + Premium via Stripe) gates advanced features, and an ML-powered moderation pipeline keeps content safe.
+
+  servers:
+    - description: Local development server
+      url: http://localhost:3000/v1
+    - description: Staging server (testing)
+      url: https://staging-api.vibemeet.com/v1
+    - description: Production server
+      url: https://api.vibemeet.com/v1
