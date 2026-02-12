@@ -8,13 +8,13 @@ info:
   
     Users discover plans through a scrollable feed or an interactive map, join with a single tap, and immediately enter a real-time group chat to coordinate details. A subscription model (Free + Premium via Stripe) gates advanced features, and an ML-powered moderation pipeline keeps content safe.
 
-  servers:
-    - description: Local development server
-      url: http://localhost:3000/v1
-    - description: Staging server (testing)
-      url: https://staging-api.vibemeet.com/v1
-    - description: Production server
-      url: https://api.vibemeet.com/v1
+servers:
+  - description: Local development server
+    url: http://localhost:3000/v1
+  - description: Staging server (testing)
+    url: https://staging-api.vibemeet.com/v1
+  - description: Production server
+    url: https://api.vibemeet.com/v1
 
 security:
   - BearerAuth: []
@@ -120,6 +120,7 @@ components:
         - first_name
         - last_name
         - role
+        - subscription
         - date_created
       properties:
         ref:
@@ -127,12 +128,85 @@ components:
           description: Unique user identifier
           example: usr_abc123
           pattern: '^usr_[a-zA-z0-p]+$'
-        firebase_uid:
-          type: string
-          description: ID returned after creating firebase account on signup
-          example: '1234abc'
         email:
           type: string
           format: email
           description: The users email used for email verification
           example: 'username@email.com'
+        firstName:
+          type: string
+          description: The users first name
+          maxLength: 20
+          example: John
+        lastName:
+          type: string
+          description: The users last name
+          maxLength: 50
+          example: Doe
+        bio:
+          type: string
+          description: Users bio
+          maxLength: 250
+          nullable: true
+          example: "I love to travel and meet people."
+        homeCity:
+          type: string
+          description: Human readable location of home city
+          nullable: true
+          example: "New York City, New York"
+        avatarUrl:
+          type: string
+          format: uri
+          description: The URI for where the avatar is hosted
+          nullable: true
+          example: 'https://aws.s3.vibemeet.com/avatars/asd2d2d'
+        interests:
+          type: array
+          description: Interests the user has selected
+          items:
+            type: object
+            properties:
+              interest_ref:
+                type: string
+              name:
+                type: string
+              description:
+                type: string
+        friendCount:
+          type: integer
+          description: Count of all users friends
+          example: 12
+        followCount:
+          type: integer
+          description: Count of all followers
+          example: 5
+        followingCount:
+          type: integer
+          description: Count of all following
+          example: 34
+        emailVerified:
+          type: boolean
+          description: Signify if the user has verified their email
+          example: true
+          default: false
+        role:
+          type: string
+          enum: ["user", "moderator", "admin"]
+          description: Signifies the users privileges
+          default: "user"
+        subscription:
+          type: string
+          enum: ["free", "premium"]
+          description: Strip subscription
+          default: "free"
+          example: "premium"
+        lastLogin:
+          type: string
+          format: datetime
+          description: The last login time
+          example: '2024-02-11T14:30:00Z'
+        dateCreated:
+          type: string
+          format: datetime
+          description: Timestamp for when user created account
+          example: '2024-02-11T14:30:00Z'
