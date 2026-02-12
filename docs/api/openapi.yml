@@ -109,3 +109,30 @@ components:
           }
         }
         ```
+
+  schemas:
+    User:
+      type: object
+      description: A VibeMeet user account
+      required:
+        - ref
+        - email
+        - first_name
+        - last_name
+        - role
+        - date_created
+      properties:
+        ref:
+          type: string
+          description: Unique user identifier
+          example: usr_abc123
+          pattern: '^usr_[a-zA-z0-p]+$'
+        firebase_uid:
+          type: string
+          description: ID returned after creating firebase account on signup
+          example: '1234abc'
+        email:
+          type: string
+          format: email
+          description: The users email used for email verification
+          example: 'username@email.com'

@@ -7,7 +7,6 @@ erDiagram
         string ref PK
         string firebase_uid UK
         string email
-        string display_name
         string first_name
         string last_name
         boolean email_verified
@@ -209,7 +208,6 @@ Primary table for user accounts, this is linked to the Firebase Auth.
 - `ref` (PK): UUID primary key
 - `firebase_uid` (UK): Firebase authentication UID
 - `email`: User email address used for verification and email contact to user
-- `display_name`: The name the user would like displayed for others- can be different to first_name + last_name
 - `first_name`: The users first name
 - `last_name`: The users last name
 - `email_verified`: Checking if the user has verified, will be used to show others if verified- may limit access to certain things
