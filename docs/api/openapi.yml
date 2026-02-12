@@ -117,11 +117,11 @@ components:
       required:
         - ref
         - email
-        - first_name
-        - last_name
+        - firstName
+        - lastName
         - role
         - subscription
-        - date_created
+        - dateCreated
       properties:
         ref:
           type: string
@@ -166,7 +166,7 @@ components:
           items:
             type: object
             properties:
-              interest_ref:
+              interestRef:
                 type: string
               name:
                 type: string
@@ -214,3 +214,62 @@ components:
           format: datetime
           description: Timestamp for when user created account
           example: '2024-02-11T14:30:00Z'
+
+    Plan:
+      type: object
+      description: A plan for a specific organised event
+      required:
+        - ref
+        - createdBy
+        - category
+        - title
+        - locationName
+        - visibility
+        - status
+        - startTime
+        - endDate
+        - createdAt
+      properties:
+        ref:
+          type: string
+          description: Ref id for the plan
+          example: 'plan_123abc'
+          pattern: '^usr_[a-zA-z0-p]+$'
+        createdBy:
+          type: string
+          description: The full name of the user who created the plan
+          example: John Doe
+        category:
+          type: string
+          description: Name of the category associated with the plan
+          example: Sport
+          enum: ["Sport", "Coffee", "Party", "Arts & Crafts", "Travel", "Transport", "Music"]
+        title:
+          type: string
+          description: Name of the plan
+          example: "Soccer game"
+          maxLength: 20
+          minLength: 3
+        description:
+          type: string
+          description: Description for the plan
+          nullable: true
+          example: "Quick 5v5 side game"
+          maxLength: 250
+        locationName:
+          type: string
+          description: Human readable location for the plan
+          example: 'Port Elliot, SA'
+        maxAttendees:
+          type: integer
+          description: Max number of users that can join the plan
+          default: 8
+          example: 5
+          minLength: 2
+        visibility:
+          type: string
+          description: Which users can view the plan
+          enum: ["public", "members", "premium", "friends_only"]
+          example: "premium"
+          default: "public"
+        status:
