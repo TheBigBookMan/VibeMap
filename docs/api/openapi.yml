@@ -15,3 +15,97 @@ info:
       url: https://staging-api.vibemeet.com/v1
     - description: Production server
       url: https://api.vibemeet.com/v1
+
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JSON Web Token (JWT) bearer authentication.
+        
+        ## Retrieving Tokens
+        Get an Access Token and Refresh Token by calling `POST /auth/login` with your email and password or using google mail via firebase.
+        
+        ```json
+        Response:
+        {
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "expiresIn": 900
+        }
+        ```
+        
+        ## Using Access Token
+        Include the access token in the `Authorization` header for all authenticated requests.
+        
+        `Authorization: Bearer eyHASDJljhSD`
+        
+        ## Token Lifetime
+        - Access Token: Expires after 15 minutes
+        - Refresh Token: Expires after 7 days
+        
+        ## Refreshing Tokens
+        When your Access Token expires, use the `POST /auth/refresh` with your refresh token to obtain a new Access Token without re-authentication.
+        
+        ```json
+        Response:
+        {
+          "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "expiresIn": 900
+        }
+        ```
+        
+        ## Token Payload
+        The JWT payload contains the following claim:
+        ```json
+        {
+          "sub": "usr_abc123",
+          "email": "user@example.com",
+          "role": "user",
+          "tier": "premium",
+          "emailVerified": true,
+          "iat": 1709251200,
+          "exp": 1709252100
+        }
+        ```
+        
+        ## Error Responses
+
+        ### 401 Unauthorized - Missing Token
+        ```json
+        {
+          "error": {
+            "code": "UNAUTHORIZED",
+            "message": "Authentication required",
+            "details": "Include a valid access token in the Authorization header"
+          }
+        }
+        ```
+
+        ### 401 Unauthorized - Invalid Token
+        ```json
+        {
+          "error": {
+            "code": "INVALID_TOKEN",
+            "message": "Invalid authentication token",
+            "details": "Token signature verification failed"
+          }
+        }
+        ```
+
+        ### 401 Unauthorized - Expired Token
+        ```json
+        {
+          "error": {
+            "code": "TOKEN_EXPIRED",
+            "message": "Access token has expired",
+            "details": "Use the refresh token to obtain a new access token"
+          }
+        }
+        ```
