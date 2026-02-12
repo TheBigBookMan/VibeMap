@@ -184,6 +184,10 @@ components:
           type: integer
           description: Count of all following
           example: 34
+        plansAttended:
+          type: integer
+          description: Count of all plans user has attended
+          example: 104
         emailVerified:
           type: boolean
           description: Signify if the user has verified their email
