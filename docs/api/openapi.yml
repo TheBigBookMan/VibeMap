@@ -418,7 +418,8 @@ components:
         userRef:
           $ref: '#/components/schemas/UserSummary'
         planRef:
-          $ref: '#/components/schemas/PlanSummary'
+          type: string
+          description: ref for the plan
         content:
           type: string
           description: Content of the message
