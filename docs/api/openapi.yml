@@ -400,6 +400,40 @@ components:
           format: date-time
           description: The date and time the plan was created
 
+    ChatMessage:
+      type: object
+      description: Messages related to a plan
+      required:
+        - ref
+        - userRef
+        - planRef
+        - content
+        - messageType
+        - createdAt
+      properties:
+        ref:
+          type: string
+          description: UID of the message
+          example: 'chat_12323'
+        userRef:
+          $ref: '#/components/schemas/UserSummary'
+        planRef:
+          $ref: '#/components/schemas/PlanSummary'
+        content:
+          type: string
+          description: Content of the message
+          example: 'Hey, how is everyone?'
+          maxLength: 500
+        messageType:
+          type: string
+          enum: ["text", "image", "system"]
+          description: The type of message sent
+        createdAt:
+          type: string
+          format: date-time
+          description: Date and time the message was sent
+          example: "2024-02-11T15:45:00Z"
+
     Error:
       type: object
       description: Standard error response throughout the application
