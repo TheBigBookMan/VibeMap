@@ -264,7 +264,6 @@ components:
           pattern: '^usr_[a-zA-z0-p]+$'
         createdBy:
           $ref: "#/components/schemas/UserSummary"
-          description: The full name of the user who created the plan
         category:
           type: object
           description: The category this plan belongs to
