@@ -441,3 +441,25 @@ components:
           format: date-time
           description: Date and time for when error occurred
           example: "2024-02-11T14:30:00Z"
+
+    PaginationResponse:
+      type: object
+      description: Pagination metadata for cursor-based pagination
+      required:
+        - cursor
+        - hasMore
+        - limit
+      properties:
+        cursor:
+          type: string
+          nullable: true
+          description: Opaque cursor for next page (null if no more data)
+          example: eyNASDnASDJKNl
+        hasMore:
+          type: boolean
+          description: If there is more data exists
+          example: false
+        limit:
+          type: integer
+          description: Number of items per page
+          example: 20
