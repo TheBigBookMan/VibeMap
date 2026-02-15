@@ -435,6 +435,63 @@ components:
           description: Date and time the message was sent
           example: "2024-02-11T15:45:00Z"
 
+    Notification:
+      type: object
+      description: Notifications sent to a user
+      required:
+        - ref
+        - userRef
+        - type
+        - title
+        - body
+        - actionUrl
+        - createdAt
+      properties:
+        ref:
+          type: string
+          description: Notification UID
+          example: 'not_123'
+        userRef:
+          type: string
+          description: UID for the user
+          example: 'usr_123'
+        type:
+          type: string
+          enum: ["plan_event", "chat_event", "system"]
+          example: "chat_event"
+          description: The type of notification
+        title:
+          type: string
+          description: Title of the notification
+          example: "Plan upcoming tonight"
+          maxLength: 20
+          minLength: 3
+        body:
+          type: string
+          description: Description of notification
+          example: "There is a plan near you tonight for going for drinks"
+          maxLength: 200
+          nullable: true
+        data:
+          type: string
+          format: JSON
+          description: Extra information for the notification
+          nullable: true
+        actionUrl:
+          type: string
+          format: URI
+          description: If the notification can redirect the user to take action
+          example: 'https://app.vibemeet.com/profilePage'
+        readAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2024-02-11T15:45:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2024-02-11T15:45:00Z"
+
     Error:
       type: object
       description: Standard error response throughout the application
