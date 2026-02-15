@@ -51,6 +51,7 @@ erDiagram
         string location_name
         geometry location_point "Point, 4326"
         int max_attendees
+        jsonb rules
         string visibility
         string status
         datetime start_time
@@ -316,6 +317,7 @@ Primary entity for an plan which contains the details for the plan created by a 
 - `location_name`: Human readable format for the location of the plan
 - `location_point`: Geometric point data for the location of the plan
 - `max_attendees`: Max number of users who can sign up and attend
+- `rules`: Rules written out by the host
 - `visibility`: Which type of users can view the plan "public | members | premium | friends_only"
 - `status`: What status the plan is currently in "draft | published | cancelled | completed"
 - `start_time`: Date and time plan starts

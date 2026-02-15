@@ -206,12 +206,12 @@ components:
           example: "premium"
         lastLogin:
           type: string
-          format: datetime
+          format: date-time
           description: The last login time
           example: '2024-02-11T14:30:00Z'
         dateCreated:
           type: string
-          format: datetime
+          format: date-time
           description: Timestamp for when user created account
           example: '2024-02-11T14:30:00Z'
 
@@ -240,10 +240,26 @@ components:
           description: The full name of the user who created the plan
           example: John Doe
         category:
-          type: string
-          description: Name of the category associated with the plan
-          example: Sport
-          enum: ["Sport", "Coffee", "Party", "Arts & Crafts", "Travel", "Transport", "Music"]
+          type: object
+          description: The category this plan belongs to
+          properties:
+            ref:
+              type: string
+              example: cat_sport
+            name:
+              type: string
+              example: Sport
+            iconUrl:
+              type: string
+              format: uri
+              nullable: true
+              example: https://vibemeet.com/icons/sport.svg
+        interests:
+          type: array
+          description: The interests associated with the plan
+          items:
+            type: string
+          example: ["sport", "soccer"]
         title:
           type: string
           description: Name of the plan
@@ -266,6 +282,10 @@ components:
           default: 8
           example: 5
           minLength: 2
+        attendeeCount:
+          type: integer
+          description: The number of attendees who have said they are going. References plan_attendee for status = 'confirmed'
+          example: 3
         visibility:
           type: string
           description: Which users can view the plan
@@ -273,3 +293,84 @@ components:
           example: "premium"
           default: "public"
         status:
+          type: string
+          description: The current status of the plan
+          enum: ["draft", "published", "cancelled", "completed"]
+          example: "cancelled"
+          default: "draft"
+        startTime:
+          type: string
+          format: date-time
+          description: The date and time when the plan starts
+          example: "2024-02-11T14:30:00Z"
+        endTime:
+          type: string
+          format: date-time
+          description: The date and time when the plan ends
+          example: "2024-02-11T16:30:00Z"
+        coverImageUrl:
+          type: string
+          format: uri
+          description: The URI for the cover image of the plan
+          nullable: true
+          example: 'https://aws.s3.vibemeet.com/avatars/asd2d2d'
+        images:
+          type: array
+          description: The images uploaded for the plan
+          items:
+            type: object
+            properties:
+              url:
+                type: string
+                description: The url for where the image is hosted
+              display_order:
+                type: integer
+                description: For knowing the ordering of the image
+        location:
+          type: object
+          description: Location information for the plan
+          properties:
+            text:
+              type: string
+              description: Human-readable location
+              example: "Joe's Bar, 123 Main St, Adelaide"
+            coords:
+              type: object
+              nullable: true
+              description: GPS coordinates (optional)
+              properties:
+                lat:
+                  type: number
+                  format: double
+                  example: -34.9285
+                lng:
+                  type: number
+                  format: double
+                  example: 138.6007
+        customFields:
+          type: object
+          description: Flexible JSON object for custom plan data
+          additionalProperties: true
+          nullable: true
+          example:
+            dietaryRestrictions: "Vegetarian options available"
+            ageRange: "18+"
+        qrCodeAvailable:
+          type: boolean
+          description: Whether QR code for check-in is available (10 min before start)
+          example: false
+        rules:
+          type: string
+          nullable: true
+          maxLength: 500
+          description: House rules or notes from the host
+          example: "BYO drinks, beginners welcome"
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the plan was last updated
+          example: "2024-02-11T15:45:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          description: The date and time the plan was created
