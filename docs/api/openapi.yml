@@ -596,3 +596,51 @@ components:
           type: integer
           description: Number of items per page
           example: 20
+
+paths:
+  ## Authentication Endpoints
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+        - Signup/Register account
+      summary: register a new user account
+      description: |
+        Register new account with email and password.
+        Rate Limit: 3 requests per hour per IP address
+        Process:
+          1. Account is created with `emailVerified: false`
+          2. Verification email is sent to the provided address
+          3. User must verify email before creating/joining plans
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - firstName
+                - lastName
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's email address
+                  example: john.doe@test.com
+                password:
+                  type: string
+                  minLength: 8
+                  description: User password
+                  example: Password123
+                firstName:
+                  type: string
+                  description: User's first name
+                  example: John
+                lastName:
+                  type: string
+                  description: User's last name
+                  example: Doe
