@@ -644,3 +644,27 @@ paths:
                   type: string
                   description: User's last name
                   example: Doe
+      responses:
+        '201':
+          description: Account has been created successfully and verification email sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+                  message:
+                    type: string
+                    example: Verification email sent to jhon.doe@test.com
+              example:
+                user:
+                  ref: user_asd
+                  email: john.doe@test.com
+                  firstName: John
+                  lastName: Doe
+                  emailVerified: false
+                  role: user
+                  tier: free
+                  createdAt: "2024-02-11T14:30:00Z"
+                message: Verification email sent to jhon.doe@test.com
