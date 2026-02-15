@@ -509,6 +509,30 @@ components:
           description: The URI for where the icon is hosted
           example: "https://app.vibemeet.com/hosted-images/icon"
 
+    Interest:
+      type: object
+      description: Interests that users can assign and plans can be assigned to
+      required:
+        - ref
+        - name
+      properties:
+        ref:
+          type: string
+          description: UID for the interest
+          example: 'int_123'
+        name:
+          type: string
+          description: Title for the interest
+          example: "Active"
+          maxLength: 20
+          minLength: 3
+        description:
+          type: string
+          description: Further information about the interest
+          nullable: true
+          maxLength: 500
+          example: "For fitness and sport related plans"
+
     Error:
       type: object
       description: Standard error response throughout the application
