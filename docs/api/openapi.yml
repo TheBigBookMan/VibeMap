@@ -795,7 +795,6 @@ paths:
                 message: Invalid credentials, please try again.
                 details: Please input valid credentials.
                 timestamp: "2024-02-11T14:30:00Z"
-
         '403':
           description: Banned from application
           content:
@@ -806,4 +805,15 @@ paths:
                 code: BANNED_USER
                 message: User is banned from VibeMeet
                 details: The User is currently banned for specific reasons
+                timestamp: "2024-02-11T14:30:00Z"
+        '429':
+          description: Rate limit error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: RATE_LIMIT_EXCEEDED
+                message: Rate limit has been exceeded
+                details: 5 requests every 15 minutes per IP, please wait 15 minutes before trying again.
                 timestamp: "2024-02-11T14:30:00Z"
