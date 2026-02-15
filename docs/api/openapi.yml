@@ -215,6 +215,33 @@ components:
           description: Timestamp for when user created account
           example: '2024-02-11T14:30:00Z'
 
+    UserSummary:
+      type: object
+      description: A summary of User which is used throughout the app.
+      required:
+        - ref
+        - firstName
+        - lastName
+      properties:
+        ref:
+          type: string
+          description: Ref id for the user
+          example: 'usr_123'
+        firstName:
+          type: string
+          description: Users first name
+          example: "Joshn"
+        lastName:
+          type: string
+          description: Users last name
+          example: "Doe"
+        avatarUrl:
+          type: string
+          format: uri
+          description: The URI for where the avatar is hosted
+          nullable: true
+          example: 'https://aws.s3.vibemeet.com/avatars/asd2d2d'
+
     Plan:
       type: object
       description: A plan for a specific organised event
@@ -236,9 +263,8 @@ components:
           example: 'plan_123abc'
           pattern: '^usr_[a-zA-z0-p]+$'
         createdBy:
-          type: string
+          $ref: "#/components/schemas/UserSummary"
           description: The full name of the user who created the plan
-          example: John Doe
         category:
           type: object
           description: The category this plan belongs to
