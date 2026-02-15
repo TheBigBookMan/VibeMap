@@ -795,3 +795,15 @@ paths:
                 message: Invalid credentials, please try again.
                 details: Please input valid credentials.
                 timestamp: "2024-02-11T14:30:00Z"
+
+        '403':
+          description: Banned from application
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: BANNED_USER
+                message: User is banned from VibeMeet
+                details: The User is currently banned for specific reasons
+                timestamp: "2024-02-11T14:30:00Z"
