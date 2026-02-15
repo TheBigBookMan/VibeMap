@@ -692,3 +692,14 @@ paths:
                 details: The email is already registered
                 fieldName: email
                 timestamp: "2024-02-11T14:30:00Z"
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: RATE_LIMIT_EXCEEDED
+                message: Rate limit exceeded
+                details: You have exceeded the rate limit of 3 requests per 1 hour, please wait an hour.
+                timestamp: "2024-02-11T14:30:00Z"
