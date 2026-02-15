@@ -680,4 +680,15 @@ paths:
                 details: Password not 8 characters long
                 fieldName: password
                 timestamp: "2024-02-11T14:30:00Z"
-
+        '409':
+          description: Duplication error with email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              example:
+                code: DUPLICATE_RESOURCE
+                message: Resource already exists
+                details: The email is already registered
+                fieldName: email
+                timestamp: "2024-02-11T14:30:00Z"
