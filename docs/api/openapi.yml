@@ -265,20 +265,7 @@ components:
         createdBy:
           $ref: "#/components/schemas/UserSummary"
         category:
-          type: object
-          description: The category this plan belongs to
-          properties:
-            ref:
-              type: string
-              example: cat_sport
-            name:
-              type: string
-              example: Sport
-            iconUrl:
-              type: string
-              format: uri
-              nullable: true
-              example: https://vibemeet.com/icons/sport.svg
+          $ref: "#/components/schemas/Category"
         interests:
           type: array
           description: The interests associated with the plan
@@ -491,6 +478,36 @@ components:
           type: string
           format: date-time
           example: "2024-02-11T15:45:00Z"
+
+    Category:
+      type: object
+      description: Category for plans to be assigned to
+      required:
+        - ref
+        - name
+        - iconUrl
+      properties:
+        ref:
+          type: string
+          description: UID for category
+          example: 'cat_123'
+        name:
+          type: string
+          description: Name of the category
+          maxLength: 20
+          minLength: 3
+          example: "Sport"
+        description:
+          type: string
+          description: More information about the category
+          maxLength: 50
+          nullable: true
+          example: "Physical activity with groups"
+        iconUrl:
+          type: string
+          format: URI
+          description: The URI for where the icon is hosted
+          example: "https://app.vibemeet.com/hosted-images/icon"
 
     Error:
       type: object
