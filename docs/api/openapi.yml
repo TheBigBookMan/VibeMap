@@ -399,3 +399,45 @@ components:
           type: string
           format: date-time
           description: The date and time the plan was created
+
+    Error:
+      type: object
+      description: Standard error response throughout the application
+      required:
+        - code
+        - message
+        - timestamp
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          format: UPPER_SNAKE_CASE
+          example: FORBIDDEN
+        message:
+          type: string
+          description: Human-readable error message
+          example: Authentication required
+        details:
+          type: string
+          nullable: true
+          description: Extra information for troubleshooting
+          example: "Invalid access token"
+        field:
+          type: string
+          nullable: true
+          description: Field causing the error
+          example: 'password'
+        fields:
+          type: object
+          description: If multiple fields causing error
+          nullable: true
+          additionalProperties:
+            type: string
+          example:
+            email: "Email required"
+            password: "Password must be more than 3 characters"
+        timestamp:
+          type: string
+          format: date-time
+          description: Date and time for when error occurred
+          example: "2024-02-11T14:30:00Z"
