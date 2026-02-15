@@ -703,3 +703,39 @@ paths:
                 message: Rate limit exceeded
                 details: You have exceeded the rate limit of 3 requests per 1 hour, please wait an hour.
                 timestamp: "2024-02-11T14:30:00Z"
+
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+        - Sign in with registered email
+      summary: Login with a registered email and password
+      description: |
+        Sign in to the app with a registered email and password to receive access token and refresh token.
+        Rate Limit: 5 requests every 15 minutes per IP
+        Process:
+          1. Sign in with email and password
+          2. If authenticated, return refresh token and access token
+        Access token lifetime: 15 minutes
+        Refresh token lifetime: 7 days
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: User's registered email
+                  example: john.doe@test.com
+                password:
+                  type: string
+                  description: User's registered password
+                  example: password12
+      responses:
