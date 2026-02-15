@@ -739,3 +739,48 @@ paths:
                   description: User's registered password
                   example: password12
       responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - accessToken
+                  - refreshToken
+                  - user
+                  - expiresIn
+                properties:
+                  accessToken:
+                    type: string
+                    description: JWT access token (15 minute expiry)
+                    example: eyASNDASDOJNASD
+                  refreshToken:
+                    type: string
+                    description: Refresh token for JWT (7 day expiry, single use)
+                    example: eyADLJNADSF
+                  user:
+                    $ref: '#/components/schemas/User'
+                  expiresIn:
+                    type: integer
+                    description: Access token lifetime in seconds
+                    example: 900
+                example:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  refreshToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  user:
+                    ref: usr_abc123
+                    email: john.doe@example.com
+                    displayName: John Doe
+                    firstName: John
+                    lastName: Doe
+                    avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_abc123.jpg
+                    bio: Coffee enthusiast
+                    homeCity: Adelaide, SA
+                    interests: [ "bouldering", "coffee" ]
+                    role: user
+                    tier: premium
+                    emailVerified: true
+                    createdAt: "2024-01-15T10:00:00Z"
+                    updatedAt: "2024-02-11T14:30:00Z"
+                  expiresIn: 900
