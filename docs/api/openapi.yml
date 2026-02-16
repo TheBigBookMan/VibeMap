@@ -845,3 +845,31 @@ paths:
                   type: string
                   description: Refresh token
                   example: eyASDASJNDS
+      responses:
+        '200':
+          description: Refresh token successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - refreshToken
+                  - accessToken
+                  - expiresIn
+                properties:
+                  refreshToken:
+                    type: string
+                    description: Refresh token
+                    example: eyASDJNASDnASD
+                  accessToken:
+                    type: string
+                    description: JWT access token
+                    example: eyNASDOJNASD
+                  expiresIn:
+                    type: integer
+                    description: Refresh token lifecycle in seconds
+                    example: 900
+                example:
+                  refreshToken: eyASDASD
+                  accessToken: eyASDJNASD
+                  expiresIn: 900
