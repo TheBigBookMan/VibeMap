@@ -817,3 +817,31 @@ paths:
                 message: Rate limit has been exceeded
                 details: 5 requests every 15 minutes per IP, please wait 15 minutes before trying again.
                 timestamp: "2024-02-11T14:30:00Z"
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+        - Refresh the JWT access token
+      summary: Refresh the JWT access token
+      description: |
+        Refresh the JWT access token by sending a request with the refresh token received when signing in.
+        Rate limit: 10 requests per hour per user
+        
+        Process:
+          1. Send the refresh token
+          2. Receive new access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refreshToken
+              properties:
+                refreshToken:
+                  type: string
+                  description: Refresh token
+                  example: eyASDASJNDS
