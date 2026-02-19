@@ -2300,3 +2300,63 @@ paths:
           schema:
             type: string
           example: pln_abc123
+      responses:
+        '200':
+          description: Plan details retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Plan'
+                  - type: object
+                    properties:
+                      isJoined:
+                        type: boolean
+                        description: Whether the authenticated user has joined (only present when authenticated)
+                        example: false
+                      canJoin:
+                        type: boolean
+                        description: Whether the authenticated user can join (only present when authenticated)
+                        example: true
+                      qrCodeAvailable:
+                        type: boolean
+                        description: Whether QR code is available for check-in (only for host, 10 min before start)
+                        example: false
+              example:
+                ref: pln_abc123
+                host:
+                  ref: usr_xyz789
+                  displayName: Alice
+                  avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_xyz789.jpg
+                category:
+                  ref: cat_sport
+                  name: Sport
+                  iconUrl: https://vibemeet.com/icons/sport.svg
+                title: Pool at Joe's Bar
+                description: Casual pool night at Joe's Bar. All skill levels welcome! We'll be playing 8-ball and 9-ball. BYO drinks.
+                tags: [ "pool", "social", "drinks" ]
+                location:
+                  text: "Joe's Bar, 123 Main St, Adelaide"
+                  coords:
+                    lat: -34.9285
+                    lng: 138.6007
+                startTime: "2024-02-15T19:00:00Z"
+                endTime: "2024-02-15T22:00:00Z"
+                maxParticipants: 8
+                participantCount: 4
+                participantPreview:
+                  - ref: usr_xyz789
+                    displayName: Alice
+                    avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_xyz789.jpg
+                  - ref: usr_001
+                    displayName: Bob
+                    avatarUrl: null
+                accessLevel: public
+                visibilityState: visible
+                coverImageUrl: https://s3.amazonaws.com/vibemeet/plans/pln_abc123/cover.jpg
+                rules: BYO drinks, beginners welcome
+                isJoined: false
+                canJoin: true
+                qrCodeAvailable: false
+                createdAt: "2024-02-11T14:30:00Z"
+                updatedAt: "2024-02-11T14:30:00Z"
