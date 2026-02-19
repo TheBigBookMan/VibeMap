@@ -1160,3 +1160,15 @@ paths:
                   message: Authentication required
                   details: Include a valid access token in the Authorization header
                   timestamp: "2024-02-11T14:30:00Z"
+        '404':
+          description: User does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: USER_NOT_EXIST
+                  message: User does not exist
+                  details: The user does not exist in the database
+                  timestamp: "2024-02-11T14:30:00Z"
