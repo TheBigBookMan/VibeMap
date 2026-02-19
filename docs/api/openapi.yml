@@ -2270,3 +2270,33 @@ paths:
                   details: Bounding box must be in format southwest_lng,southwest_lat,northeast_lng,northeast_lat
                   field: bbox
                   timestamp: "2024-02-11T14:30:00Z"
+
+  /plans/{planRef}:
+    get:
+      tags:
+        - Plans
+      summary: Get plan details
+      description: |
+        Retrieve full details for a specific plan.
+        
+        Visibility rules:
+        - Public plans: Anyone can view
+        - Members plans: Requires authentication
+        - Premium plans: Requires Premium subscription
+        - Hidden plans: Only visible to moderators
+        
+        Authenticated users see:
+        - Whether they've already joined
+        - Full participant list (if joined)
+        - QR code availability (if host and near start time)
+      security:
+        - BearerAuth: [ ]
+        - { }  # Optional authentication
+      parameters:
+        - name: planRef
+          in: path
+          required: true
+          description: Plan ID
+          schema:
+            type: string
+          example: pln_abc123
