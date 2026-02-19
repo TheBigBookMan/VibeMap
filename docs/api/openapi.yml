@@ -1313,3 +1313,18 @@ paths:
                 tier: premium
                 emailVerified: true
                 updatedAt: "2024-02-11T15:45:00Z"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidFirstName:
+                  value:
+                    error:
+                      code: VALIDATION_ERROR
+                      message: Request validation failed
+                      details: First name must be between 3 and 50 characters
+                      field: firstName
+                      timestamp: "2024-02-11T14:30:00Z"
