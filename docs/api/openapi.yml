@@ -2372,3 +2372,24 @@ paths:
                   message: Plan not found
                   details: No plan exists with this ID
                   timestamp: "2024-02-11T14:30:00Z"
+        '403':
+          description: Forbidden - insufficient access level
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                membersOnly:
+                  value:
+                    error:
+                      code: FORBIDDEN
+                      message: Authentication required
+                      details: This plan is only visible to logged-in users
+                      timestamp: "2024-02-11T14:30:00Z"
+                premiumOnly:
+                  value:
+                    error:
+                      code: PREMIUM_REQUIRED
+                      message: Premium subscription required
+                      details: This plan is only visible to Premium subscribers
+                      timestamp: "2024-02-11T14:30:00Z"
