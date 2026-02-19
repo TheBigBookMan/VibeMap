@@ -1373,3 +1373,6 @@ paths:
                   nullable: true
                   description: Optional reason for account deletion (for feedback)
                   example: Moving to a different platform
+      responses:
+        '204':
+          description: Account deleted successfully. User has been logged out.
