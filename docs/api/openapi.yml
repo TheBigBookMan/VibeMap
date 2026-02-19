@@ -2498,3 +2498,9 @@ paths:
                 endTime: "2024-02-15T23:00:00Z"
                 updatedAt: "2024-02-11T15:45:00Z"
                 # ... full plan object
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
