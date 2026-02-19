@@ -1017,3 +1017,16 @@ paths:
                   minLength: 8
                   description: New password (min 8 characters)
                   example: NewSecurePass456
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password has been reset successfully. You can now log in with your new password.
+              example:
+                message: "Password has been reset successfully. You can now log in with your new password."
