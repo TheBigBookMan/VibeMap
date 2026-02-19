@@ -2393,3 +2393,94 @@ paths:
                       message: Premium subscription required
                       details: This plan is only visible to Premium subscribers
                       timestamp: "2024-02-11T14:30:00Z"
+
+    patch:
+      tags:
+        - Plans
+      summary: Update plan details
+      description: |
+        Update an existing plan. Only the host can update their plan.
+        
+        Restrictions:
+        - Cannot update plan after it has started
+        - All fields are optional (partial update)
+        - Changing time/location notifies all participants
+        
+        Rate Limit: 20 requests per hour (Free), 40 requests per hour (Premium)
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: planRef
+          in: path
+          required: true
+          description: Plan ID
+          schema:
+            type: string
+          example: pln_abc123
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  minLength: 5
+                  maxLength: 100
+                  example: Pool at Joe's Bar (Updated)
+                description:
+                  type: string
+                  maxLength: 2000
+                  nullable: true
+                  example: Updated description with new details
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 5
+                  example: [ "pool", "social", "drinks", "beginners" ]
+                locationName:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  example: "Joe's Bar, 123 Main St, Adelaide"
+                locationCoords:
+                  type: object
+                  nullable: true
+                  properties:
+                    lat:
+                      type: number
+                      format: double
+                      example: -34.9285
+                    lng:
+                      type: number
+                      format: double
+                      example: 138.6007
+                startTime:
+                  type: string
+                  format: date-time
+                  example: "2024-02-15T20:00:00Z"
+                endTime:
+                  type: string
+                  format: date-time
+                  example: "2024-02-15T23:00:00Z"
+                maxParticipants:
+                  type: integer
+                  minimum: 2
+                  maximum: 50
+                  example: 10
+                accessLevel:
+                  type: string
+                  enum: [ public, members, premium ]
+                  example: members
+                rules:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+                  example: Updated rules
+            example:
+              title: Pool at Joe's Bar (Starting Later)
+              startTime: "2024-02-15T20:00:00Z"
+              endTime: "2024-02-15T23:00:00Z"
