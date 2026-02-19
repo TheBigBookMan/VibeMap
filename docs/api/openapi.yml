@@ -1030,3 +1030,24 @@ paths:
                     example: Password has been reset successfully. You can now log in with your new password.
               example:
                 message: "Password has been reset successfully. You can now log in with your new password."
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidToken:
+                  value:
+                    error:
+                      code: INVALID_TOKEN
+                      message: Invalid reset token
+                      details: The reset token is invalid or has already been used
+                      timestamp: "2024-02-11T14:30:00Z"
+                expiredToken:
+                  value:
+                    error:
+                      code: TOKEN_EXPIRED
+                      message: Reset token has expired
+                      details: Reset tokens expire after 1 hour. Please request a new one.
+                      timestamp: "2024-02-11T14:30:00Z"
