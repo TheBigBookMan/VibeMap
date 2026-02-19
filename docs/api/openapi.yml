@@ -1494,3 +1494,9 @@ paths:
       responses:
         '204':
           description: All notifications marked as read
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
