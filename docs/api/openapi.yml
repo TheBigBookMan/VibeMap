@@ -1389,3 +1389,9 @@ paths:
                   details: The provided email does not match your account email
                   field: confirmEmail
                   timestamp: "2024-02-11T14:30:00Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
