@@ -1395,3 +1395,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /users/me/notifications:
+    get:
+      tags:
+        - Users
+      summary: List user's notifications
+      description: |
+        Get a paginated list of the authenticated user's notifications.
+        
+        Notifications are sorted by creation date (newest first).
+        Unread notifications appear at the top.
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: limit
+          in: query
+          description: Number of notifications per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 20
+          example: 20
+        - name: cursor
+          in: query
+          description: Pagination cursor from previous response
+          schema:
+            type: string
+            nullable: true
+          example: eyJpZCI6Im5vdF94eXo3ODkiLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTExVDAwOjAwOjAwWiJ9
+        - name: unreadOnly
+          in: query
+          description: Filter to show only unread notifications
+          schema:
+            type: boolean
+            default: false
+          example: false
