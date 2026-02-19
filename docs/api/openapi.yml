@@ -1762,3 +1762,25 @@ paths:
                   message: User not found
                   details: No user exists with this ID
                   timestamp: "2024-02-11T14:30:00Z"
+
+  # Plan endpoints
+  /plans:
+    get:
+      tags:
+        - Plans
+      summary: List plans (feed)
+      description: |
+        Get a paginated, filterable feed of upcoming plans.
+        
+        Visibility rules:
+        - Visitors: See only `public` plans
+        - Free users: See `public` + `members` plans
+        - Premium users: See `public` + `members` + `premium` plans
+        - Moderators: See everything (including hidden plans)
+        
+        Sorting: Plans are sorted by relevance (start time, distance, tag match).
+        
+        Rate Limit: 100 requests per 15 minutes (Free), 200 requests per 15 minutes (Premium)
+      security:
+        - BearerAuth: []
+        - {}  # Optional authentication
