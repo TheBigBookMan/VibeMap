@@ -873,3 +873,24 @@ paths:
                   refreshToken: eyASDASD
                   accessToken: eyASDJNASD
                   expiresIn: 900
+        '401':
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidToken:
+                  value:
+                    error:
+                      code: INVALID_TOKEN
+                      message: Invalid refresh token
+                      details: The refresh token is malformed or has been revoked
+                      timestamp: "2024-02-11T14:30:00Z"
+                expiredToken:
+                  value:
+                    error:
+                      code: TOKEN_EXPIRED
+                      message: Refresh token has expired
+                      details: Please log in again to obtain a new refresh token
+                      timestamp: "2024-02-11T14:30:00Z"
