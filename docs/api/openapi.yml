@@ -2562,3 +2562,6 @@ paths:
           schema:
             type: string
           example: pln_abc123
+      responses:
+        '204':
+          description: Plan cancelled successfully. All participants have been notified.
