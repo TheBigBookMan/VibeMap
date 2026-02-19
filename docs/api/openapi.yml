@@ -2055,3 +2055,33 @@ paths:
                   customFields:
                     skillLevel: Advanced (V5+)
                     equipment: Climbing shoes required
+      responses:
+        '201':
+          description: Plan created successfully
+          headers:
+            Location:
+              description: URL of the created plan
+              schema:
+                type: string
+              example: /plans/pln_abc123
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  plan:
+                    $ref: '#/components/schemas/Plan'
+                  message:
+                    type: string
+                    description: Additional message (e.g., moderation status)
+                    example: Plan created successfully and is now visible in the feed
+              examples:
+                planCreatedVisible:
+                  summary: Plan created and visible
+                  value:
+                    plan:
+                      ref: pln_abc123
+                      title: Pool at Joe's Bar
+                      # ... full plan object
+                    message: Plan created successfully and is now visible in the feed
+
