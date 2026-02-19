@@ -907,3 +907,16 @@ paths:
                   details: You have exceeded the refresh rate limit. Please try again in 60 minutes.
                   retryAfter: 3600
                   timestamp: "2024-02-11T14:30:00Z"
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout and invalidate tokens
+      description: |
+        Invalidate the current session's refresh token.
+        
+        The access token remains valid until it expires (15 minutes).
+        The refresh token is immediately revoked, preventing future token refresh.
+      security:
+        - BearerAuth: []
