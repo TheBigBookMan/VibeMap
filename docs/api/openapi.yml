@@ -1897,3 +1897,161 @@ paths:
                   cursor: eyJpZCI6InBsbl9hYmMxMjMiLCJzdGFydFRpbWUiOiIyMDI0LTAyLTE1VDE5OjAwOjAwWiJ9
                   hasMore: true
                   limit: 20
+    post:
+      tags:
+        - Plans
+      summary: Create a new plan
+      description: |
+        Create a new plan (meetup event).
+        
+        Requirements:
+        - Email must be verified
+        - Free users: Limited to 5 plans per month
+        - Premium users: Unlimited plans
+        - Premium tier required to create premium-access plans
+        
+        Process:
+        1. Plan is created in database
+        2. Host is automatically joined as a participant
+        3. Plan is submitted for moderation (if enabled)
+        4. Matching users are notified via the notification system
+        
+        Rate Limit: 10 requests per hour (Free), 20 requests per hour (Premium)
+      security:
+        - BearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - categoryRef
+                - title
+                - tags
+                - locationName
+                - startTime
+                - endTime
+                - maxParticipants
+                - accessLevel
+              properties:
+                categoryRef:
+                  type: string
+                  description: Category reference
+                  example: cat_sport
+                title:
+                  type: string
+                  minLength: 5
+                  maxLength: 50
+                  description: Plan title
+                  example: Pool at Joe's Bar
+                description:
+                  type: string
+                  maxLength: 200
+                  nullable: true
+                  description: Detailed description
+                  example: Casual pool night at Joe's Bar. All skill levels welcome! BYO drinks.
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 1
+                  maxItems: 5
+                  description: Category tags for filtering and matching
+                  example: [ "pool", "social", "drinks" ]
+                locationName:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  description: Human-readable location
+                  example: "Joe's Bar, 123 Main St, Adelaide"
+                locationCoords:
+                  type: object
+                  nullable: true
+                  description: Optional GPS coordinates for map display
+                  properties:
+                    lat:
+                      type: number
+                      format: double
+                      minimum: -90
+                      maximum: 90
+                      example: -34.9285
+                    lng:
+                      type: number
+                      format: double
+                      minimum: -180
+                      maximum: 180
+                      example: 138.6007
+                startTime:
+                  type: string
+                  format: date-time
+                  description: When the plan starts (must be in the future)
+                  example: "2024-02-15T19:00:00Z"
+                endTime:
+                  type: string
+                  format: date-time
+                  description: When the plan ends (must be after startTime)
+                  example: "2024-02-15T22:00:00Z"
+                maxParticipants:
+                  type: integer
+                  minimum: 2
+                  maximum: 50
+                  description: Maximum number of participants (including host)
+                  example: 8
+                accessLevel:
+                  type: string
+                  enum: [ public, members, premium ]
+                  description: Who can view and join this plan
+                  example: public
+                rules:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+                  description: House rules or notes
+                  example: BYO drinks, beginners welcome
+                coverImageUrl:
+                  type: string
+                  format: uri
+                  nullable: true
+                  description: URL to uploaded cover image (upload separately via /uploads endpoint)
+                  example: https://s3.amazonaws.com/vibemeet/plans/temp_abc123.jpg
+                customFields:
+                  type: object
+                  nullable: true
+                  additionalProperties: true
+                  description: Flexible JSON for custom plan data
+                  example:
+                    ageRange: "18+"
+                    skillLevel: Beginner friendly
+            examples:
+              basicPlan:
+                summary: Basic public plan
+                value:
+                  categoryRef: cat_sport
+                  title: Pool at Joe's Bar
+                  description: Casual pool night. All skill levels welcome!
+                  tags: [ "pool", "social" ]
+                  locationName: "Joe's Bar, 123 Main St, Adelaide"
+                  startTime: "2024-02-15T19:00:00Z"
+                  endTime: "2024-02-15T22:00:00Z"
+                  maxParticipants: 8
+                  accessLevel: public
+              premiumPlan:
+                summary: Premium plan with full details
+                value:
+                  categoryRef: cat_sport
+                  title: Advanced Bouldering Session
+                  description: High-intensity bouldering session for experienced climbers. We'll be working on V5-V8 problems.
+                  tags: [ "bouldering", "fitness", "advanced" ]
+                  locationName: The Ledge Climbing Gym, Adelaide
+                  locationCoords:
+                    lat: -34.9285
+                    lng: 138.6007
+                  startTime: "2024-02-15T18:00:00Z"
+                  endTime: "2024-02-15T20:00:00Z"
+                  maxParticipants: 6
+                  accessLevel: premium
+                  rules: Climbing shoes required. Chalk provided.
+                  customFields:
+                    skillLevel: Advanced (V5+)
+                    equipment: Climbing shoes required
