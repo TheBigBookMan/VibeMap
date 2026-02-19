@@ -1376,3 +1376,16 @@ paths:
       responses:
         '204':
           description: Account deleted successfully. User has been logged out.
+        '400':
+          description: Email confirmation mismatch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: VALIDATION_ERROR
+                  message: Email confirmation does not match
+                  details: The provided email does not match your account email
+                  field: confirmEmail
+                  timestamp: "2024-02-11T14:30:00Z"
