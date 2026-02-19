@@ -987,3 +987,33 @@ paths:
                   details: Please try again in 60 minutes
                   retryAfter: 3600
                   timestamp: "2024-02-11T14:30:00Z"
+
+  /auth/reset-password:
+    post:
+      tags:
+        - Authentication
+      summary: Reset password with token
+      description: |
+        Set a new password using the reset token from the email.
+        
+        Rate Limit: 5 requests per hour per token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - token
+                - newPassword
+              properties:
+                token:
+                  type: string
+                  description: Reset token from the email link
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                newPassword:
+                  type: string
+                  minLength: 8
+                  description: New password (min 8 characters)
+                  example: NewSecurePass456
