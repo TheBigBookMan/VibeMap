@@ -1482,3 +1482,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /users/me/notifications/read-all:
+    post:
+      tags:
+        - Users
+      summary: Mark all notifications as read
+      description: Mark all of the authenticated user's notifications as read.
+      security:
+        - BearerAuth: [ ]
