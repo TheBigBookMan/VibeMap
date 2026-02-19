@@ -1750,3 +1750,15 @@ paths:
                     friendCount: 32
                     createdAt: "2023-11-20T10:00:00Z"
                     relationshipStatus: null
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: USER_NOT_FOUND
+                  message: User not found
+                  details: No user exists with this ID
+                  timestamp: "2024-02-11T14:30:00Z"
