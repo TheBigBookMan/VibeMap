@@ -2257,3 +2257,16 @@ paths:
                     maxParticipants: 6
                     accessLevel: members
                 count: 2
+        '400':
+          description: Invalid bounding box
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: VALIDATION_ERROR
+                  message: Invalid bounding box format
+                  details: Bounding box must be in format southwest_lng,southwest_lat,northeast_lng,northeast_lat
+                  field: bbox
+                  timestamp: "2024-02-11T14:30:00Z"
