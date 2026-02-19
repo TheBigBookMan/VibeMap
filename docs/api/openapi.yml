@@ -1172,3 +1172,126 @@ paths:
                   message: User does not exist
                   details: The user does not exist in the database
                   timestamp: "2024-02-11T14:30:00Z"
+    patch:
+      tags:
+        - Users
+      summary: Update current user's profile
+      description: |
+        Update the authenticated user's profile fields.
+        All fields are optional. Only provided fields will be updated.
+        Note: Email changes require re-verification.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  maxLength: 50
+                  nullable: true
+                  description: First name
+                  example: John
+                lastName:
+                  type: string
+                  maxLength: 50
+                  nullable: true
+                  description: Last name
+                  example: Smith
+                bio:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+                  description: Short bio or description
+                  example: Coffee enthusiast and weekend hiker. Always up for outdoor adventures!
+                homeCity:
+                  type: string
+                  maxLength: 100
+                  nullable: true
+                  description: Home city for display purposes
+                  example: Adelaide, SA
+                homeLocation:
+                  type: object
+                  nullable: true
+                  description: GPS coordinates for distance calculations (never shown publicly)
+                  properties:
+                    lat:
+                      type: number
+                      format: double
+                      minimum: -90
+                      maximum: 90
+                      example: -34.9285
+                    lng:
+                      type: number
+                      format: double
+                      minimum: -180
+                      maximum: 180
+                      example: 138.6007
+                interests:
+                  type: array
+                  items:
+                    type: string
+                  minItems: 0
+                  maxItems: 20
+                  description: Interest tags for notification matching
+                  example: [ "bouldering", "coffee", "board games", "hiking" ]
+                notificationPreferences:
+                  type: object
+                  description: Notification settings
+                  properties:
+                    enabled:
+                      type: boolean
+                      description: Master notification toggle
+                      example: true
+                    matchingTags:
+                      type: array
+                      items:
+                        type: string
+                      description: Only notify for plans with these tags
+                      example: [ "bouldering", "hiking" ]
+                    radiusKm:
+                      type: integer
+                      enum: [ 2, 5, 10, 25, 50 ]
+                      description: Notification radius in kilometers
+                      example: 10
+                    quietHours:
+                      type: object
+                      properties:
+                        enabled:
+                          type: boolean
+                          example: true
+                        start:
+                          type: string
+                          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+                          description: Start time in HH:mm format (24-hour)
+                          example: "22:00"
+                        end:
+                          type: string
+                          pattern: '^([01]\d|2[0-3]):[0-5]\d$'
+                          description: End time in HH:mm format (24-hour)
+                          example: "07:00"
+            examples:
+              updateBasicInfo:
+                summary: Update basic profile info
+                value:
+                  displayName: John Smith
+                  bio: Coffee enthusiast and weekend hiker
+                  homeCity: Adelaide, SA
+              updateInterests:
+                summary: Update interests
+                value:
+                  interests: [ "bouldering", "coffee", "board games", "hiking", "photography" ]
+              updateNotifications:
+                summary: Update notification preferences
+                value:
+                  notificationPreferences:
+                    enabled: true
+                    matchingTags: [ "bouldering", "hiking" ]
+                    radiusKm: 10
+                    quietHours:
+                      enabled: true
+                      start: "22:00"
+                      end: "07:00"
