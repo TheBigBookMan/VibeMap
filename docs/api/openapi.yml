@@ -1491,3 +1491,6 @@ paths:
       description: Mark all of the authenticated user's notifications as read.
       security:
         - BearerAuth: [ ]
+      responses:
+        '204':
+          description: All notifications marked as read
