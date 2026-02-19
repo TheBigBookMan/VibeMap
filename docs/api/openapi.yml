@@ -1328,3 +1328,9 @@ paths:
                       details: First name must be between 3 and 50 characters
                       field: firstName
                       timestamp: "2024-02-11T14:30:00Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
