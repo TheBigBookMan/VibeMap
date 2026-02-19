@@ -2526,3 +2526,9 @@ paths:
                   code: PLAN_STARTED
                   message: Cannot update plan after it has started
                   timestamp: "2024-02-11T14:30:00Z"
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
