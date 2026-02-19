@@ -2538,3 +2538,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Plans
+      summary: Cancel/delete plan
+      description: |
+        Cancel a plan. Only the host can cancel their plan.
+        
+        Process:
+        1. Plan is soft-deleted (visibility_state set to cancelled)
+        2. All participants are notified
+        3. Chat room is closed immediately
+        4. Plan is removed from feeds and map
+        
+        Note: This action cannot be undone.
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: planRef
+          in: path
+          required: true
+          description: Plan ID
+          schema:
+            type: string
+          example: pln_abc123
