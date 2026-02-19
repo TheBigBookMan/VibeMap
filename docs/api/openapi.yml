@@ -2484,3 +2484,17 @@ paths:
               title: Pool at Joe's Bar (Starting Later)
               startTime: "2024-02-15T20:00:00Z"
               endTime: "2024-02-15T23:00:00Z"
+      responses:
+        '200':
+          description: Plan updated successfully. Participants have been notified.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+              example:
+                ref: pln_abc123
+                title: Pool at Joe's Bar (Starting Later)
+                startTime: "2024-02-15T20:00:00Z"
+                endTime: "2024-02-15T23:00:00Z"
+                updatedAt: "2024-02-11T15:45:00Z"
+                # ... full plan object
