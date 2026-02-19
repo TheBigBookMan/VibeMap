@@ -974,3 +974,16 @@ paths:
                     example: If an account exists with this email, a password reset link has been sent
               example:
                 message: "If an account exists with this email, a password reset link has been sent"
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: RATE_LIMIT_EXCEEDED
+                  message: Too many password reset requests
+                  details: Please try again in 60 minutes
+                  retryAfter: 3600
+                  timestamp: "2024-02-11T14:30:00Z"
