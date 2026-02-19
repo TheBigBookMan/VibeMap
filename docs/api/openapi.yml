@@ -1148,3 +1148,15 @@ paths:
                 followingCount: 89
                 createdAt: "2024-01-15T10:00:00Z"
                 updatedAt: "2024-02-11T14:30:00Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: UNAUTHORIZED
+                  message: Authentication required
+                  details: Include a valid access token in the Authorization header
+                  timestamp: "2024-02-11T14:30:00Z"
