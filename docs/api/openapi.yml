@@ -1446,3 +1446,39 @@ paths:
                       $ref: '#/components/schemas/Notification'
                   pagination:
                     $ref: '#/components/schemas/PaginationResponse'
+              example:
+                data:
+                  - ref: not_abc123
+                    type: plan_match
+                    title: New plan near you
+                    body: Bouldering at The Ledge - 3.2 km away, tonight at 6pm
+                    data:
+                      planRef: pln_xyz789
+                      planTitle: Bouldering at The Ledge
+                      distance: 3.2
+                    actionUrl: /plans/pln_xyz789
+                    read: false
+                    readAt: null
+                    createdAt: "2024-02-11T14:30:00Z"
+                  - ref: not_def456
+                    type: plan_joined
+                    title: Someone joined your plan
+                    body: Jake joined Pool at Joe's Bar (5/8 spots)
+                    data:
+                      planRef: pln_abc123
+                      userId: usr_xyz789
+                      userName: Jake
+                    actionUrl: /plans/pln_abc123
+                    read: true
+                    readAt: "2024-02-11T15:00:00Z"
+                    createdAt: "2024-02-11T13:15:00Z"
+                pagination:
+                  cursor: eyJpZCI6Im5vdF9kZWY0NTYiLCJjcmVhdGVkQXQiOiIyMDI0LTAyLTExVDEzOjE1OjAwWiJ9
+                  hasMore: true
+                  limit: 20
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
