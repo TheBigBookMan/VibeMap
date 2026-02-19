@@ -1668,3 +1668,85 @@ paths:
           schema:
             type: string
           example: usr_xyz789
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/UserSummary'
+                  - type: object
+                    properties:
+                      bio:
+                        type: string
+                        nullable: true
+                        example: Coffee enthusiast and weekend hiker
+                      homeCity:
+                        type: string
+                        nullable: true
+                        example: Adelaide, SA
+                      interests:
+                        type: array
+                        items:
+                          type: string
+                        example: [ "bouldering", "coffee", "board games" ]
+                      friendCount:
+                        type: integer
+                        example: 47
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "2024-01-15T10:00:00Z"
+                      relationshipStatus:
+                        type: object
+                        nullable: true
+                        description: Viewer's relationship with this user (only present when authenticated)
+                        properties:
+                          isFriend:
+                            type: boolean
+                            example: false
+                          isFollowing:
+                            type: boolean
+                            example: true
+                          isFollower:
+                            type: boolean
+                            example: false
+                          isBlocked:
+                            type: boolean
+                            example: false
+                          friendRequestStatus:
+                            type: string
+                            enum: [ none, sent, received, accepted ]
+                            nullable: true
+                            example: sent
+              examples:
+                authenticatedView:
+                  summary: Viewing as authenticated user
+                  value:
+                    ref: usr_xyz789
+                    displayName: Alice Smith
+                    avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_xyz789.jpg
+                    bio: Coffee lover and board game enthusiast
+                    homeCity: Adelaide, SA
+                    interests: [ "coffee", "board games", "hiking" ]
+                    friendCount: 32
+                    createdAt: "2023-11-20T10:00:00Z"
+                    relationshipStatus:
+                      isFriend: false
+                      isFollowing: true
+                      isFollower: false
+                      isBlocked: false
+                      friendRequestStatus: sent
+                unauthenticatedView:
+                  summary: Viewing as visitor
+                  value:
+                    ref: usr_xyz789
+                    displayName: Alice Smith
+                    avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_xyz789.jpg
+                    bio: Coffee lover and board game enthusiast
+                    homeCity: Adelaide, SA
+                    interests: [ "coffee", "board games", "hiking" ]
+                    friendCount: 32
+                    createdAt: "2023-11-20T10:00:00Z"
+                    relationshipStatus: null
