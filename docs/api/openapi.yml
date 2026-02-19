@@ -1573,3 +1573,67 @@ paths:
         Processing time: May take up to 30 seconds for large accounts.
       security:
         - BearerAuth: [ ]
+      responses:
+        '200':
+          description: Personal data export
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  plansCreated:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plan'
+                  plansJoined:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plan'
+                  messages:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ChatMessage'
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+                  subscriptionHistory:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        tier:
+                          type: string
+                          example: premium
+                        startDate:
+                          type: string
+                          format: date-time
+                        endDate:
+                          type: string
+                          format: date-time
+                          nullable: true
+                  exportedAt:
+                    type: string
+                    format: date-time
+                    description: Timestamp when this export was generated
+                    example: "2024-02-11T14:30:00Z"
+              example:
+                user:
+                  ref: usr_abc123
+                  email: john.doe@example.com
+                  displayName: John Doe
+                  # ... full user object
+                plansCreated: # ... array of plans
+                plansJoined: # ... array of plans]
+                messages: # ... array of messages
+                notifications: # ... array of notifications
+                subscriptionHistory: [
+                  {
+                    tier: premium,
+                    startDate: "2024-01-15T00:00:00Z",
+                    endDate: null
+                  }
+                ]
+                exportedAt: "2024-02-11T14:30:00Z"
