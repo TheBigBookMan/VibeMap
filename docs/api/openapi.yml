@@ -2576,3 +2576,9 @@ paths:
                   code: NOT_PLAN_HOST
                   message: Only the host can cancel this plan
                   timestamp: "2024-02-11T14:30:00Z"
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
