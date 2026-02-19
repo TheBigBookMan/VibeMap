@@ -2151,3 +2151,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /plans/map:
+    get:
+      tags:
+        - Plans
+      summary: Get plans for map display
+      description: |
+        Get plans within a map viewport bounding box.
+        
+        Returns lightweight marker data optimized for map rendering.
+        Results are cached in Redis (60s TTL) for performance.
+        
+        Usage: Called when the user pans/zooms the map. Frontend should
+        debounce requests (300ms) to avoid excessive API calls.
+        
+        Rate Limit: 100 requests per 15 minutes (Free), 200 requests per 15 minutes (Premium)
+      security:
+        - BearerAuth: [ ]
+        - { }  # Optional authentication
+      parameters:
+        - name: bbox
+          in: query
+          required: true
+          description: Bounding box (southwest_lng,southwest_lat,northeast_lng,northeast_lat)
+          schema:
+            type: string
+            pattern: '^-?\d+\.?\d*,-?\d+\.?\d*,-?\d+\.?\d*,-?\d+\.?\d*$'
+          example: 138.5,-35.0,138.7,-34.8
+        - name: tags
+          in: query
+          description: Filter by tags (comma-separated)
+          schema:
+            type: string
+          example: bouldering,fitness
