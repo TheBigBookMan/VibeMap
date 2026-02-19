@@ -1295,3 +1295,21 @@ paths:
                       enabled: true
                       start: "22:00"
                       end: "07:00"
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                ref: usr_abc123
+                email: john.doe@example.com
+                displayName: John Smith
+                bio: Coffee enthusiast and weekend hiker
+                homeCity: Adelaide, SA
+                interests: [ "bouldering", "coffee", "board games", "hiking" ]
+                role: user
+                tier: premium
+                emailVerified: true
+                updatedAt: "2024-02-11T15:45:00Z"
