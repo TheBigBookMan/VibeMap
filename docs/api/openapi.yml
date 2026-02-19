@@ -2504,3 +2504,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+        '403':
+          description: Not the plan host
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: NOT_PLAN_HOST
+                  message: Only the host can update this plan
+                  timestamp: "2024-02-11T14:30:00Z"
