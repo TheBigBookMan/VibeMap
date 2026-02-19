@@ -2117,3 +2117,31 @@ paths:
                       message: Start time must be in the future
                       field: startTime
                       timestamp: "2024-02-11T14:30:00Z"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                emailNotVerified:
+                  value:
+                    error:
+                      code: EMAIL_NOT_VERIFIED
+                      message: Email verification required
+                      details: You must verify your email before creating plans
+                      timestamp: "2024-02-11T14:30:00Z"
+                quotaExceeded:
+                  value:
+                    error:
+                      code: QUOTA_EXCEEDED
+                      message: Monthly plan limit reached
+                      details: Free users can create up to 5 plans per month. Upgrade to Premium for unlimited plans.
+                      timestamp: "2024-02-11T14:30:00Z"
+                premiumRequired:
+                  value:
+                    error:
+                      code: PREMIUM_REQUIRED
+                      message: Premium subscription required
+                      details: Creating premium-access plans requires a Premium subscription
+                      timestamp: "2024-02-11T14:30:00Z"
