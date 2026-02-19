@@ -1071,3 +1071,22 @@ paths:
           schema:
             type: string
           example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+      responses:
+        '200':
+          description: Email verified successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Email verified successfully! You can now create and join plans.
+                  user:
+                    $ref: '#/components/schemas/User'
+              example:
+                message: "Email verified successfully! You can now create and join plans."
+                user:
+                  ref: usr_abc123
+                  email: john.doe@example.com
+                  emailVerified: true
