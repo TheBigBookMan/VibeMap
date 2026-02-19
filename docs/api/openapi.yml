@@ -1090,3 +1090,22 @@ paths:
                   ref: usr_abc123
                   email: john.doe@example.com
                   emailVerified: true
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidToken:
+                  value:
+                    error:
+                      code: INVALID_TOKEN
+                      message: Invalid verification token
+                      timestamp: "2024-02-11T14:30:00Z"
+                alreadyVerified:
+                  value:
+                    error:
+                      code: ALREADY_VERIFIED
+                      message: Email address is already verified
+                      timestamp: "2024-02-11T14:30:00Z"
