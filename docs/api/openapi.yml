@@ -1643,3 +1643,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /users/{userId}:
+    get:
+      tags:
+        - Users
+      summary: View another user's public profile
+      description: |
+        Retrieve another user's public profile.
+        
+        Privacy controls:
+        - Only public information is shown
+        - User's home location coordinates are never exposed
+        - Email is hidden
+        - If authenticated, includes relationship status between viewer and viewed user
+      security:
+        - BearerAuth: [ ]
+        - { }  # Optional authentication
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: User ID to view
+          schema:
+            type: string
+          example: usr_xyz789
