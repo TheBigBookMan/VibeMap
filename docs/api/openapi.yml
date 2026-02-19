@@ -894,3 +894,16 @@ paths:
                       message: Refresh token has expired
                       details: Please log in again to obtain a new refresh token
                       timestamp: "2024-02-11T14:30:00Z"
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: RATE_LIMIT_EXCEEDED
+                  message: Too many refresh requests
+                  details: You have exceeded the refresh rate limit. Please try again in 60 minutes.
+                  retryAfter: 3600
+                  timestamp: "2024-02-11T14:30:00Z"
