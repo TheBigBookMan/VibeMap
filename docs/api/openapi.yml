@@ -1334,3 +1334,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Users
+      summary: Delete user account
+      description: |
+        Permanently delete the authenticated user's account and all associated data.
+        
+        GDPR Compliance:
+        - All personal data is removed from the database
+        - Profile photos are deleted from S3
+        - Plans created by the user are cancelled
+        - Chat messages are anonymized (author replaced with "Deleted User")
+        - The user is immediately logged out
+        
+        This action cannot be undone.
+        
+        Confirmation Required: Include the user's email in the request body to confirm deletion.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - confirmEmail
+              properties:
+                confirmEmail:
+                  type: string
+                  format: email
+                  description: User's email address for confirmation
+                  example: john.doe@example.com
+                reason:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+                  description: Optional reason for account deletion (for feedback)
+                  example: Moving to a different platform
