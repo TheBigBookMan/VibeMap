@@ -2057,7 +2057,7 @@ paths:
                     equipment: Climbing shoes required
       responses:
         '201':
-          description: Plan created successfully
+          description: Plan created successfully and awaiting moderation approval
           headers:
             Location:
               description: URL of the created plan
@@ -2084,4 +2084,36 @@ paths:
                       title: Pool at Joe's Bar
                       # ... full plan object
                     message: Plan created successfully and is now visible in the feed
-
+                planPendingReview:
+                  summary: Plan pending moderation review
+                  value:
+                    plan:
+                      ref: pln_abc123
+                      title: Pool at Joe's Bar
+                      visibilityState: pending_review
+                      # ... full plan object
+                    message: Plan created successfully. It is currently under review and will be visible once approved.
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidTime:
+                  value:
+                    error:
+                      code: VALIDATION_ERROR
+                      message: Invalid time range
+                      details: End time must be after start time
+                      fields:
+                        startTime: "2024-02-15T19:00:00Z"
+                        endTime: "2024-02-15T18:00:00Z"
+                      timestamp: "2024-02-11T14:30:00Z"
+                pastStartTime:
+                  value:
+                    error:
+                      code: VALIDATION_ERROR
+                      message: Start time must be in the future
+                      field: startTime
+                      timestamp: "2024-02-11T14:30:00Z"
