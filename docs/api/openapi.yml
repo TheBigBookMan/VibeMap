@@ -935,3 +935,15 @@ paths:
                   message: Authentication required
                   details: Include a valid access token in the Authorization header
                   timestamp: "2024-02-11T14:30:00Z"
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - Authentication
+      summary: Request password reset
+      description: |
+        Send a password reset email to the user.
+        
+        Rate Limit: 3 requests per hour per IP address
+        Security Note: For security, this endpoint always returns 200 even if the email doesn't exist.
+      security: [ ]
