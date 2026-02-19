@@ -1500,3 +1500,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /users/me/notifications/{notificationRef}/read:
+    patch:
+      tags:
+        - Users
+      summary: Mark notification as read
+      description: Mark a specific notification as read.
+      security:
+        - BearerAuth: [ ]
+      parameters:
+        - name: notificationRef
+          in: path
+          required: true
+          description: Notification ID
+          schema:
+            type: string
+          example: not_abc123
