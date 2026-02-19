@@ -947,3 +947,30 @@ paths:
         Rate Limit: 3 requests per hour per IP address
         Security Note: For security, this endpoint always returns 200 even if the email doesn't exist.
       security: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email address associated with the account
+                  example: john.doe@example.com
+      responses:
+        '200':
+          description: If the email exists, a reset link has been sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: If an account exists with this email, a password reset link has been sent
+              example:
+                message: "If an account exists with this email, a password reset link has been sent"
