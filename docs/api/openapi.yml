@@ -1543,3 +1543,9 @@ paths:
                   code: NOT_FOUND
                   message: Notification not found
                   timestamp: "2024-02-11T14:30:00Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
