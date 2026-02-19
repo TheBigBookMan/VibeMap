@@ -1784,3 +1784,116 @@ paths:
       security:
         - BearerAuth: []
         - {}  # Optional authentication
+      parameters:
+        - name: limit
+          in: query
+          description: Number of plans per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 20
+          example: 20
+        - name: cursor
+          in: query
+          description: Pagination cursor from previous response
+          schema:
+            type: string
+            nullable: true
+          example: eyJpZCI6InBsbl94eXo3ODkiLCJzdGFydFRpbWUiOiIyMDI0LTAyLTE1VDE4OjAwOjAwWiJ9
+        - name: tags
+          in: query
+          description: Filter by tags (comma-separated)
+          schema:
+            type: string
+          example: bouldering,fitness
+        - name: distance
+          in: query
+          description: Maximum distance from user's location (km). Requires authentication.
+          schema:
+            type: integer
+            enum: [ 2, 5, 10, 25, 50 ]
+          example: 10
+        - name: timeRange
+          in: query
+          description: Filter by time range
+          schema:
+            type: string
+            enum: [ starting_soon, today, this_week, custom ]
+            default: this_week
+          example: today
+        - name: startAfter
+          in: query
+          description: Custom start time filter (ISO 8601). Used when timeRange=custom
+          schema:
+            type: string
+            format: date-time
+          example: "2024-02-15T00:00:00Z"
+        - name: startBefore
+          in: query
+          description: Custom end time filter (ISO 8601). Used when timeRange=custom
+          schema:
+            type: string
+            format: date-time
+          example: "2024-02-22T23:59:59Z"
+        - name: search
+          in: query
+          description: Search plan titles (case-insensitive partial match)
+          schema:
+            type: string
+            maxLength: 100
+          example: pool
+      responses:
+        '200':
+          description: Plans retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Plan'
+                  pagination:
+                    $ref: '#/components/schemas/PaginationResponse'
+              example:
+                data:
+                  - ref: pln_abc123
+                    host:
+                      ref: usr_xyz789
+                      displayName: Alice
+                      avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_xyz789.jpg
+                    category:
+                      ref: cat_sport
+                      name: Sport
+                      iconUrl: https://vibemeet.com/icons/sport.svg
+                    title: Pool at Joe's Bar
+                    description: Casual pool night. All skill levels welcome!
+                    tags: [ "pool", "social", "drinks" ]
+                    location:
+                      text: "Joe's Bar, 123 Main St, Adelaide"
+                      coords:
+                        lat: -34.9285
+                        lng: 138.6007
+                    startTime: "2024-02-15T19:00:00Z"
+                    endTime: "2024-02-15T22:00:00Z"
+                    maxParticipants: 8
+                    participantCount: 4
+                    participantPreview:
+                      - ref: usr_001
+                        displayName: Alice
+                        avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_001.jpg
+                      - ref: usr_002
+                        displayName: Bob
+                        avatarUrl: null
+                    accessLevel: public
+                    visibilityState: visible
+                    coverImageUrl: https://s3.amazonaws.com/vibemeet/plans/pln_abc123/cover.jpg
+                    distanceKm: 2.3
+                    createdAt: "2024-02-11T14:30:00Z"
+                    updatedAt: "2024-02-11T14:30:00Z"
+                pagination:
+                  cursor: eyJpZCI6InBsbl9hYmMxMjMiLCJzdGFydFRpbWUiOiIyMDI0LTAyLTE1VDE5OjAwOjAwWiJ9
+                  hasMore: true
+                  limit: 20
