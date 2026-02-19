@@ -1109,3 +1109,17 @@ paths:
                       code: ALREADY_VERIFIED
                       message: Email address is already verified
                       timestamp: "2024-02-11T14:30:00Z"
+
+  ## User endpoints
+  /users/me:
+    get:
+      tags:
+        - Users
+      summary: Get current user's profile
+      description: |
+        Retrieve the authenticated user's complete profile information.
+        
+        Includes personal details, subscription status, notification preferences,
+        and account settings.
+      security:
+        - BearerAuth: []
