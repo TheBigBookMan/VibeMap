@@ -2515,3 +2515,14 @@ paths:
                   code: NOT_PLAN_HOST
                   message: Only the host can update this plan
                   timestamp: "2024-02-11T14:30:00Z"
+        '422':
+          description: Cannot update - plan already started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: PLAN_STARTED
+                  message: Cannot update plan after it has started
+                  timestamp: "2024-02-11T14:30:00Z"
