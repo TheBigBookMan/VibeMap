@@ -2185,3 +2185,75 @@ paths:
           schema:
             type: string
           example: bouldering,fitness
+      responses:
+        '200':
+          description: Map markers retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  markers:
+                    type: array
+                    items:
+                      type: object
+                      description: Lightweight marker data for map display
+                      properties:
+                        ref:
+                          type: string
+                          example: pln_abc123
+                        lat:
+                          type: number
+                          format: double
+                          example: -34.9285
+                        lng:
+                          type: number
+                          format: double
+                          example: 138.6007
+                        title:
+                          type: string
+                          example: Pool at Joe's Bar
+                        startTime:
+                          type: string
+                          format: date-time
+                          example: "2024-02-15T19:00:00Z"
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          example: [ "pool", "social" ]
+                        participantCount:
+                          type: integer
+                          example: 4
+                        maxParticipants:
+                          type: integer
+                          example: 8
+                        accessLevel:
+                          type: string
+                          enum: [ public, members, premium ]
+                          example: public
+                  count:
+                    type: integer
+                    description: Total number of markers returned
+                    example: 12
+              example:
+                markers:
+                  - ref: pln_abc123
+                    lat: -34.9285
+                    lng: 138.6007
+                    title: Pool at Joe's Bar
+                    startTime: "2024-02-15T19:00:00Z"
+                    tags: [ "pool", "social" ]
+                    participantCount: 4
+                    maxParticipants: 8
+                    accessLevel: public
+                  - ref: pln_def456
+                    lat: -34.9250
+                    lng: 138.6050
+                    title: Bouldering Session
+                    startTime: "2024-02-15T18:00:00Z"
+                    tags: [ "bouldering", "fitness" ]
+                    participantCount: 3
+                    maxParticipants: 6
+                    accessLevel: members
+                count: 2
