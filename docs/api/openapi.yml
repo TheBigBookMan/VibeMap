@@ -1517,3 +1517,18 @@ paths:
           schema:
             type: string
           example: not_abc123
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+              example:
+                ref: not_abc123
+                type: plan_match
+                title: New plan near you
+                body: Bouldering at The Ledge - 3.2 km away, tonight at 6pm
+                read: true
+                readAt: "2024-02-11T15:30:00Z"
+                createdAt: "2024-02-11T14:30:00Z"
