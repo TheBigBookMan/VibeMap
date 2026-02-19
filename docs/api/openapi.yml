@@ -1549,3 +1549,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /users/me/data-export:
+    get:
+      tags:
+        - Users
+      summary: Export personal data (GDPR)
+      description: |
+        Download all personal data associated with the authenticated user's account
+        in JSON format.
+        
+        GDPR Compliance: Users have the right to data portability.
+        
+        Included data:
+        - User profile and account details
+        - All plans created by the user
+        - All plans joined by the user
+        - All chat messages sent by the user
+        - All notifications received
+        - All reports filed
+        - Subscription history
+        
+        Processing time: May take up to 30 seconds for large accounts.
+      security:
+        - BearerAuth: [ ]
