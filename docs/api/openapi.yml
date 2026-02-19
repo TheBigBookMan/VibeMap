@@ -1123,3 +1123,28 @@ paths:
         and account settings.
       security:
         - BearerAuth: []
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              example:
+                ref: usr_abc123
+                email: john.doe@example.com
+                displayName: John Doe
+                firstName: John
+                lastName: Doe
+                bio: Coffee enthusiast and weekend hiker
+                avatarUrl: https://s3.amazonaws.com/vibemeet/avatars/usr_abc123.jpg
+                homeCity: Adelaide, SA
+                interests: [ "bouldering", "coffee", "board games" ]
+                role: user
+                tier: premium
+                emailVerified: true
+                friendCount: 47
+                followerCount: 123
+                followingCount: 89
+                createdAt: "2024-01-15T10:00:00Z"
+                updatedAt: "2024-02-11T14:30:00Z"
