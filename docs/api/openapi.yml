@@ -920,3 +920,6 @@ paths:
         The refresh token is immediately revoked, preventing future token refresh.
       security:
         - BearerAuth: []
+      responses:
+        '204':
+          description: Logout successful. Refresh token invalidated.
