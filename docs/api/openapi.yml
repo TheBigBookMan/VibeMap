@@ -2360,3 +2360,15 @@ paths:
                 qrCodeAvailable: false
                 createdAt: "2024-02-11T14:30:00Z"
                 updatedAt: "2024-02-11T14:30:00Z"
+        '404':
+          description: Plan not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: PLAN_NOT_FOUND
+                  message: Plan not found
+                  details: No plan exists with this ID
+                  timestamp: "2024-02-11T14:30:00Z"
