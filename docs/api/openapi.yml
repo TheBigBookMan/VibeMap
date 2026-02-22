@@ -2583,7 +2583,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '401':
-          description: Unauthorized
+          description: Unauthorised
           content:
             application/json:
               schema:
